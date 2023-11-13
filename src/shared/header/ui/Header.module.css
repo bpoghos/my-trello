@@ -1,0 +1,82 @@
+.profileBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgb(220, 155, 33);
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profileBtn img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.profileDropDown {
+    max-width: 300px;
+    background-color: #fff;
+    box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
+    border-radius: 5px;
+    padding: 20px;
+    position: absolute;
+    right: 5px;
+    top: 60px;
+}
+
+
+
+.profileDropDown p {
+    color: #757575;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.signOutBtn {
+    width: 100%;
+    background-color: #fff;
+    border: none;
+    text-underline-offset: 1px;
+}
+
+.line {
+    border-top: 1px solid #000;
+}
+
+.profileInfoBox {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    color: #000;
+    cursor: pointer;
+}
+
+
+.profilePicture {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgb(220, 155, 33);
+    color: #fff;
+    display: flex;
+    margin-right: 10px;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.profilePicture img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.profileInfo p {
+    margin: 0;
+    font-weight: 400;
+    font-size: 13px;
+}
