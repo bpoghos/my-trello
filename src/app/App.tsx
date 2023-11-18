@@ -7,6 +7,7 @@ import { auth } from "../firebase";
 import { User, onAuthStateChanged, signOut } from "firebase/auth";
 import Header from "../shared/Header";
 import { ProcessProps, TaskProps, WorkspaceProps } from "./App.interface";
+import Loading from "../components/Loading";
 
 
 const MainPage = lazy(() => import("../pages/MainPage"))
@@ -176,7 +177,7 @@ const App: FC = () => {
   return (
     <div className="app">
       {!shouldHideHeader && <Header handleSingOut={handleSingOut} user={user} />}
-      <Suspense fallback='loading'>
+      <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <MainPage />} />
           <Route path="/" element={<MainPage />} />

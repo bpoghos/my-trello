@@ -3,7 +3,15 @@ import { Button, Container, Navbar } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { HeaderProps } from './Header.interface'
 import styles from "./styles/Header.module.css"
-import { CREATE, CREATE_BOARD, CREATE_BOARD_TEXT, CREATE_WOEKSPACE, CREATE_WOEKSPACE_TEXT, START_WITH_A_TEMPLATE, START_WITH_A_TEMPLATE_TEXT } from '../../constant/constant'
+import {
+    CREATE,
+    CREATE_BOARD,
+    CREATE_BOARD_TEXT,
+    CREATE_WOEKSPACE,
+    CREATE_WOEKSPACE_TEXT,
+    START_WITH_A_TEMPLATE,
+    START_WITH_A_TEMPLATE_TEXT
+} from '../../constant/constant'
 
 
 const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
@@ -38,7 +46,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
                 user ?
                     <Navbar bg="dark" variant='dark' data-bs-theme="light" >
                         <Container fluid className='text-light'>
-                            <Navbar.Brand href="/boards">Trello</Navbar.Brand>
+                            <Navbar.Brand href="/home">Trello</Navbar.Brand>
                             <Button onClick={openCreateDropDown}>{CREATE}</Button>
                             {
                                 isCreateOpen ?
