@@ -1,0 +1,19 @@
+.sideBar {
+    width: 250px;
+    padding: 10px;
+    margin-right: 50px;
+}
+
+.btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.btns button {
+    margin: 2px;
+    background-color: #fff;
+    border: none;
+    text-align: start;
+    width: 100%;
+}

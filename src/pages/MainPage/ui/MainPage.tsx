@@ -5,7 +5,7 @@ const MainPage: FC = () => {
     return (
         <>
             <Container className='mt-5'>
-                <h1>Welcome to Trello</h1>
+                <h1>Welcome to TRELLO</h1>
             </Container>
         </>
     )

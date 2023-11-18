@@ -1,24 +1,22 @@
 import { FC } from "react"
-import styles from "./RegisterPage.module.css"
+import styles from "./styles/RegisterPage.module.css"
 import { Button, Container, Form } from "react-bootstrap"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { FaGoogle, FaGithub } from "react-icons/fa6"
 import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { auth } from "../../../firebase"
-import { ProfilePageProps } from "../../../shared/header/ui/Header.interface"
+import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
 
 
-const RegisterPage: FC<ProfilePageProps> = ({ user }) => {
+const RegisterPage: FC<ProfilePageProps> = () => {
 
 
-    const navigate = useNavigate()
 
     const signInWithGoogle = async () => {
         const googleProvider = new GoogleAuthProvider();
 
         try {
             await signInWithPopup(auth, googleProvider);
-            navigate(`/boards`)
         } catch (error) {
             console.log(error);
         }
@@ -28,7 +26,6 @@ const RegisterPage: FC<ProfilePageProps> = ({ user }) => {
         const githubProvider = new GithubAuthProvider();
         try {
             await signInWithPopup(auth, githubProvider);
-            navigate(`/boards`);
         } catch (error) {
             console.error(error);
         }

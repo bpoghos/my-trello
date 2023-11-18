@@ -1,7 +1,7 @@
 import { FC } from "react"
-import { HeaderProps, ProfilePageProps } from "../../../shared/header/ui/Header.interface"
+import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
 import { Container } from "react-bootstrap"
-import styles from "./ProfilePage.module.css"
+import styles from "./styles/ProfilePage.module.css"
 
 
 
