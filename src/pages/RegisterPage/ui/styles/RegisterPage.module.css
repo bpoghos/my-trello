@@ -39,3 +39,14 @@
     align-items: center;
     height: 24px;
 }
+
+
+.visableBtn {
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.error {
+    font-size: 12px;
+    color: red;
+}

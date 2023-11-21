@@ -1,35 +1,30 @@
-import { FC } from "react"
+import { ChangeEvent, FC, useState } from "react"
 import styles from "./styles/LoginPage.module.css"
-import { Button, Container, Form } from "react-bootstrap"
+import { Button, Container, Form, InputGroup } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import { FaGoogle, FaGithub } from "react-icons/fa6"
-import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { auth } from "../../../firebase"
+import { FaGoogle, FaGithub, FaEye, FaEyeSlash } from "react-icons/fa6"
 import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
+import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
+import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
+import { signiInWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
 
 
 const LoginPage: FC<ProfilePageProps> = () => {
 
+    const [isVisable, setIsVisable] = useState<boolean>(false)
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
 
-    const signInWithGoogle = async () => {
-        const googleProvider = new GoogleAuthProvider();
-
-        try {
-            await signInWithPopup(auth, googleProvider);
-        } catch (error) {
-            console.log(error);
-        }
+    const handleVisable = () => {
+        setIsVisable((prevState) => !prevState)
     }
 
-    const signInWithGitHub = async () => {
-        const githubProvider = new GithubAuthProvider();
-        try {
-            await signInWithPopup(auth, githubProvider);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
+    const getEmailValue = (e: ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value)
+    }
+    const getPasswordValue = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value)
+    }
 
 
     return (
@@ -43,10 +38,26 @@ const LoginPage: FC<ProfilePageProps> = () => {
                             required
                             type="text"
                             placeholder="Enter your email"
+                            className="mb-2"
+                            onChange={getEmailValue}
                         />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                        <InputGroup className="mb-1">
+                            <Form.Control
+                                required
+                                type={
+                                    isVisable ? "text" : "password"
+                                }
+                                placeholder="Enter your Password"
+                                onChange={getPasswordValue}
+                            />
+                            <InputGroup.Text className={styles.visableBtn} onClick={handleVisable}>
+                                {
+                                    isVisable ? <FaEye /> : <FaEyeSlash />
+                                }
+                            </InputGroup.Text>
+                        </InputGroup>
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary">Continue</Button>
+                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={() => signiInWithEmail(email, password)}>Continue</Button>
                     OR
                     <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

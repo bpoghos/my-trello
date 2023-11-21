@@ -1,35 +1,37 @@
-import { FC } from "react"
+import { ChangeEvent, FC, MouseEventHandler, useState } from "react"
 import styles from "./styles/RegisterPage.module.css"
-import { Button, Container, Form } from "react-bootstrap"
+import { Button, Container, Form, InputGroup } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import { FaGoogle, FaGithub } from "react-icons/fa6"
-import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { auth } from "../../../firebase"
+import { FaGoogle, FaGithub, FaEyeSlash, FaEye } from "react-icons/fa6"
 import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
+import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
+import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
+import { signUpWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
+import { Error } from "./errors/RegisterPageErrors"
 
 
 const RegisterPage: FC<ProfilePageProps> = () => {
 
+    const [isVisable, setIsVisable] = useState<boolean>(false)
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [emailTouched, setEmailTouched] = useState<boolean>(false);
+    const [passwordTouched, setPasswordTouched] = useState<boolean>(false);
 
 
-    const signInWithGoogle = async () => {
-        const googleProvider = new GoogleAuthProvider();
 
-        try {
-            await signInWithPopup(auth, googleProvider);
-        } catch (error) {
-            console.log(error);
-        }
+    const handleVisable = () => {
+        setIsVisable((prevState) => !prevState)
     }
 
-    const signInWithGitHub = async () => {
-        const githubProvider = new GithubAuthProvider();
-        try {
-            await signInWithPopup(auth, githubProvider);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const getEmailValue = (e: ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value)
+        setEmailTouched(true)
+    }
+    const getPasswordValue = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value)
+        setPasswordTouched(true)
+    }
 
 
 
@@ -42,12 +44,35 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                     <Form.Group>
                         <Form.Control
                             required
-                            type="text"
-                            placeholder="Enter your email"
+                            type="email"
+                            placeholder="Email"
+                            className="mb-2"
+                            onChange={getEmailValue}
+
                         />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                        {
+                            emailTouched && !email.length ?
+                                <div className={styles.error}><p>{Error.emptyEmailInput}</p></div>
+                                : null
+                        }
+                        <InputGroup className="mb-1">
+                            <Form.Control
+                                required
+                                type={
+                                    isVisable ? "text" : "password"
+                                }
+                                placeholder="Password"
+                                onChange={getPasswordValue}
+                            />
+                            <InputGroup.Text className={styles.visableBtn} onClick={handleVisable}>
+                                {
+                                    isVisable ? <FaEye /> : <FaEyeSlash />
+                                }
+                            </InputGroup.Text>
+                        </InputGroup>
+                        {passwordTouched && !password.length ? <div className={styles.error}><p>{Error.emptyPasswordInput}</p></div> : null}
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary">Sign up</Button>
+                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={() => signUpWithEmail(email, password)}>Sign up</Button>
                     OR
                     <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>
