@@ -1,25 +1,104 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useParams } from "react-router";
-import { WorkspaceProps } from "../../../app/App.interface";
+import { ProcessProps, TaskProps, WorkspaceProps } from "../../../app/App.interface";
 import Process from "../../../components/Process";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useDispatch } from "react-redux";
+import { updateProcessesOrder, updateTasksOrder } from "../../../app/workspaceSlice";
 
-const Workspace = ({ workspace }: { workspace: WorkspaceProps[] }) => {
+const Workspace = () => {
     const params = useParams();
     const { title } = params;
+    const dispatch = useDispatch()
+    const { workspace } = useSelector((state: RootState) => state)
+
 
     const singleWorkspace = workspace.find(
         (ws: WorkspaceProps) => ws.title === title
     );
 
+    const onDragEnd = (result: any) => {
+        const { source, destination, draggableId } = result;
+        console.log({ source, destination, draggableId });
+        if (!destination) {
+            return;
+        }
+
+        if (source.droppableId === destination.droppableId && source.index === destination.index) {
+            return;
+        }
+
+        //////
+
+        const sourceProcess: ProcessProps = singleWorkspace?.processes.find((process) => process.title === source.droppableId) as ProcessProps;
+        const destinationColumn: ProcessProps = singleWorkspace?.processes.find((process) => process.title === destination.droppableId) as ProcessProps;
+
+        const newSourceCards: TaskProps[] = Array.from(sourceProcess?.data as TaskProps[])
+        const [removedCard] = newSourceCards.splice(source.index, 1);
+
+        if (source.droppableId === destination.droppableId) {
+            newSourceCards.splice(destination.index, 0, removedCard);
+
+            const newColumn: ProcessProps = {
+                ...sourceProcess,
+                data: newSourceCards,
+            };
+            console.log(newColumn);
+
+            dispatch(updateProcessesOrder({ newColumn, singleWorkspace }));
+
+
+        } else {
+            const newDestinationCards: TaskProps[] = Array.from(destinationColumn.data);
+            newDestinationCards.splice(destination.index, 0, removedCard);
+
+
+            const newsourceProcess: ProcessProps = {
+                ...sourceProcess,
+                data: newSourceCards
+            }
+
+            const newDestinationColumn: ProcessProps = {
+                ...destinationColumn,
+                data: newDestinationCards
+            }
+
+            console.log({ newsourceProcess, newDestinationColumn });
+
+            dispatch(updateTasksOrder({
+                singleWorkspace,
+                newDestinationColumn,
+                newsourceProcess
+            }));
+        }
+
+
+        //////
+    }
     return (
         <Container className="d-flex mt-5">
-            <Row>
-                {singleWorkspace?.processes.map((single) => (
-                    <Col lg={3} key={single.title}>
-                        <Process data={single} />
-                    </Col>
-                ))}
-            </Row>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Row>
+                    {singleWorkspace?.processes.map((single: ProcessProps) => (
+                        <Droppable droppableId={single.title} key={single.title}>
+                            {
+                                (provided) => {
+                                    return (
+                                        <Col lg={3} key={single.title}
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}>
+                                            <Process data={single} singleWorkspace={singleWorkspace} />
+                                        </Col>
+                                    )
+                                }
+                            }
+                        </Droppable>
+                    ))
+                    }
+                </Row>
+            </DragDropContext>
         </Container>
     );
 };

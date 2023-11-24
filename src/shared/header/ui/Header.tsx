@@ -1,7 +1,10 @@
 import { FC, useState } from 'react'
-import { Button, Container, Navbar } from 'react-bootstrap'
+import { Button, Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { HeaderProps } from './Header.interface'
+import { BsBell, BsFillGrid3X3GapFill, BsInfoCircle, BsSearch } from "react-icons/bs"
+import logo from "./images/trello_logo_2.png"
+import logo_user from "./images/Trello_logo_user.png"
 import styles from "./styles/Header.module.css"
 import {
     CREATE,
@@ -12,6 +15,8 @@ import {
     START_WITH_A_TEMPLATE,
     START_WITH_A_TEMPLATE_TEXT
 } from '../../constant/constant'
+
+
 
 
 const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
@@ -44,10 +49,40 @@ const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
         <>
             {
                 user ?
-                    <Navbar bg="dark" variant='dark' data-bs-theme="light" >
+                    <Navbar bg="white" variant='light' data-bs-theme="light" className={styles.navBarUser}>
                         <Container fluid className='text-light'>
-                            <Navbar.Brand href="/home">Trello</Navbar.Brand>
-                            <Button onClick={openCreateDropDown}>{CREATE}</Button>
+                            <div className={styles.menuIconContainer}>
+                                <BsFillGrid3X3GapFill />
+                            </div>
+                            <Navbar.Brand href="/home">
+                                <div className={styles.logoUserContainer}>
+                                    <img className={styles.logoUser} alt='brand-logo' src={logo_user} />
+                                </div>
+                            </Navbar.Brand>
+                            <Nav className={`me-auto ${styles.links}`}>
+                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Features" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Solutions" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Plans" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Resources" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <Button size='sm' className='me-auto' onClick={openCreateDropDown}>{CREATE}</Button>
+                            </Nav>
+                            <div className={styles.searchContainer}>
+                                <Form.Control
+                                    type='text'
+                                    placeholder={`Search`}
+                                    className={styles.searchInput}
+                                />
+                                <div className={styles.notificationIconContainer}>
+                                    <BsBell />
+                                </div>
+                                <div className={styles.informationIconContainer}>
+                                    <BsInfoCircle />
+                                </div>
+                            </div>
                             {
                                 isCreateOpen ?
                                     <div className={styles.createDropDown}>
@@ -113,14 +148,31 @@ const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
                         </Container>
                     </Navbar>
                     :
-                    <Navbar bg="dark" variant='dark' data-bs-theme="light">
-                        <Container>
-                            <Navbar.Brand href="/">Trello</Navbar.Brand>
-                            <Link to="/login">
-                                <Button size='lg' variant='primary'>Login</Button>
-                            </Link>
+                    <Navbar bg="white" variant='light' data-bs-theme="light" className='p-0'>
+                        <Container >
+                            <Navbar.Brand href="/" className='p-0'>
+                                <img className={styles.logo} alt='brand-logo' src={logo} />
+                            </Navbar.Brand>
+                            <Nav className={`me-auto ${styles.links}`}>
+                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Features" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Solutions" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Plans" id="basic-nav-dropdown">
+                                </NavDropdown>
+                                <Nav.Link className={`me-3 ${styles.navLinks}`} href="#link">Pricing</Nav.Link>
+                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Resources" id="basic-nav-dropdown">
+                                </NavDropdown>
+                            </Nav>
+                            <Link to="#"></Link>
+                            <div className={styles.btnsContainer}>
+                                <Link to="/login">
+                                    <Button size='lg' variant='light'>Login</Button>
+                                </Link>
+                                <div className={styles.getFreeBtn}>Get Trello for free</div>
+                            </div>
                         </Container>
-                    </Navbar>
+                    </Navbar >
             }
         </>
     )

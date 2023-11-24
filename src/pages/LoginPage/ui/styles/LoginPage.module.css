@@ -39,3 +39,9 @@
     align-items: center;
     height: 24px;
 }
+
+.error {
+    text-align: start;
+    font-size: 12px;
+    color: red;
+}

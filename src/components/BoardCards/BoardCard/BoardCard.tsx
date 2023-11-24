@@ -5,7 +5,6 @@ import { WorkspaceProps } from "../../../app/App.interface"
 const BoardCard = ({ data }: { data: WorkspaceProps }) => {
 
     return (
-
         <Link to={`/workspace/${data.title}`} className={styles.link}>
             <div className={styles.card}>
                 <h5>{data.title}</h5>

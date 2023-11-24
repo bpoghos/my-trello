@@ -16,10 +16,11 @@ const Reply = ({ replies }: { replies: RepliesProps }) => {
                     <span>{replies.date}</span>
                 </div>
 
-                <div className={styles.inputContainer}>
-                    <input type="text" value={replies.reply} />
+                <div className={styles.textContainer}>
+                    <p>{replies.reply}</p>
                     <div>
                         <Button variant="link">reply</Button>
+                        <Button variant="link">edit</Button>
                     </div>
                 </div>
 

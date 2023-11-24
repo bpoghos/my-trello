@@ -17,9 +17,7 @@
     border-radius: 50%;
 }
 
-.commentContainer {
-    width: 100%;
-}
+
 
 .info {
     display: flex;
@@ -37,26 +35,18 @@
     color: #8e8e8e;
 }
 
-.inputContainer {
+.textContainer {
     width: 100%;
 }
 
-.inputContainer input {
+.textContainer p {
     padding: 5px 10px;
     width: 100%;
-    color: #606060;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
-    border: none;
-    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
 }
 
-.inputContainer input:hover {
-    background-color: #f4f4f4;
-}
-
-.inputContainer button {
+.textContainer button {
     border: none;
     outline: none;
     text-decoration: none;

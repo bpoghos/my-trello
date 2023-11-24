@@ -1,21 +1,24 @@
 import { useParams } from "react-router"
 import { TaskProps } from "../../../app/App.interface"
 import { Button } from "react-bootstrap"
-import { User } from "firebase/auth"
-import styles from "./styles/TaskPage.module.css"
+import styles from "./styles/Task.module.css"
 import { ChangeEvent, MouseEventHandler, useState } from "react"
-import Comments from "../../../components/Comments"
+import Comments from "../../Comments"
 
 
-const TaskPage = ({ task, user }: { task: TaskProps[], user: User | null }) => {
+const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, setIsOpen: Function }) => {
 
-    const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    const [isTextAreaClicked, setIsTextAreaClicked] = useState<boolean>(false)
     const [isLength, setIsLength] = useState<string>('')
     const [isClicked, setIsClicked] = useState<boolean>(false)
 
 
+
+
+
     const handleClick = () => {
-        setIsOpen(true)
+        setIsTextAreaClicked(true)
     }
 
     const handleWrite = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -30,16 +33,15 @@ const TaskPage = ({ task, user }: { task: TaskProps[], user: User | null }) => {
     const params = useParams()
     const { id } = params
 
-    const singleTask = task.find((t: TaskProps) => t.id === id)
-
-
     return (
         <div className={styles.taskPage}>
             <div className={styles.taskBox}>
 
                 <div className={styles.titleBox}>
                     <h4>{singleTask?.title}</h4>
-                    <Button>X</Button>
+
+                    <Button onClick={() => setIsOpen(false)}>X</Button>
+
                 </div>
 
                 <h5>Description: <p>{singleTask?.description}</p></h5>
@@ -47,11 +49,11 @@ const TaskPage = ({ task, user }: { task: TaskProps[], user: User | null }) => {
 
                 <div className={styles.commentBox}>
 
-                    {
+                    {/* {
                         user?.photoURL ?
                             <img alt="profilePic" src={user?.photoURL} />
                             : user?.displayName
-                    }
+                    } */}
                     <div className={styles.commentInputBox}>
 
                         <textarea
@@ -61,7 +63,7 @@ const TaskPage = ({ task, user }: { task: TaskProps[], user: User | null }) => {
                             value={isLength} />
 
                         {
-                            isOpen ? <Button
+                            isTextAreaClicked ? <Button
                                 className={styles.saveBtn}
                                 variant="success"
                                 disabled={!isLength ? true : false}
@@ -80,4 +82,4 @@ const TaskPage = ({ task, user }: { task: TaskProps[], user: User | null }) => {
     )
 }
 
-export default TaskPage
+export default Task

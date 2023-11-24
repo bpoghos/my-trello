@@ -17,3 +17,32 @@
     text-align: start;
     width: 100%;
 }
+
+.workspaces {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.workspacesTitle {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.workspacesTitle p {
+    margin: 0;
+}
+
+.plusIconContainer {
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.plusIconContainer:hover {
+    background-color: #DCDFE4;
+}

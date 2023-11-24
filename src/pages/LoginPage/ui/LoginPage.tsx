@@ -6,7 +6,8 @@ import { FaGoogle, FaGithub, FaEye, FaEyeSlash } from "react-icons/fa6"
 import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
 import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
 import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
-import { signiInWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
+import { signInWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
+import { Error, emailRegex } from "../../RegisterPage/ui/errors/RegisterPageErrors"
 
 
 const LoginPage: FC<ProfilePageProps> = () => {
@@ -14,6 +15,8 @@ const LoginPage: FC<ProfilePageProps> = () => {
     const [isVisable, setIsVisable] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
 
     const handleVisable = () => {
         setIsVisable((prevState) => !prevState)
@@ -21,10 +24,41 @@ const LoginPage: FC<ProfilePageProps> = () => {
 
     const getEmailValue = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value)
+        setEmailError(null)
     }
     const getPasswordValue = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value)
+        setPasswordError(null)
     }
+
+
+
+    const validateInputs = () => {
+        let isValid = true;
+
+        if (!email.trim()) {
+            setEmailError(Error.emptyEmailInput);
+            isValid = false;
+        } else if (!emailRegex.test(email)) {
+            setEmailError(Error.wrongEmail)
+            isValid = false
+        }
+        if (!password.trim()) {
+            setPasswordError(Error.emptyPasswordInput);
+            isValid = false;
+        } else if (password.length < 6) {
+            setPasswordError(Error.shortPassword);
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const handleSignUp = () => {
+        if (validateInputs()) {
+            signInWithEmail(email, password);
+        }
+    };
 
 
     return (
@@ -40,7 +74,9 @@ const LoginPage: FC<ProfilePageProps> = () => {
                             placeholder="Enter your email"
                             className="mb-2"
                             onChange={getEmailValue}
+                            isInvalid={!!emailError}
                         />
+                        <p className={styles.error}>{emailError}</p>
                         <InputGroup className="mb-1">
                             <Form.Control
                                 required
@@ -49,6 +85,7 @@ const LoginPage: FC<ProfilePageProps> = () => {
                                 }
                                 placeholder="Enter your Password"
                                 onChange={getPasswordValue}
+                                isInvalid={!!passwordError}
                             />
                             <InputGroup.Text className={styles.visableBtn} onClick={handleVisable}>
                                 {
@@ -56,8 +93,11 @@ const LoginPage: FC<ProfilePageProps> = () => {
                                 }
                             </InputGroup.Text>
                         </InputGroup>
+                        {
+                            passwordError ? <p className={styles.error}>{passwordError}</p> : null
+                        }
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={() => signiInWithEmail(email, password)}>Continue</Button>
+                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignUp}>Continue</Button>
                     OR
                     <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

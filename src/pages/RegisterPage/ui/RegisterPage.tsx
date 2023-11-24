@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEventHandler, useState } from "react"
+import { ChangeEvent, FC, useState } from "react"
 import styles from "./styles/RegisterPage.module.css"
 import { Button, Container, Form, InputGroup } from "react-bootstrap"
 import { Link } from "react-router-dom"
@@ -7,7 +7,7 @@ import { ProfilePageProps } from "../../../shared/Header/ui/Header.interface"
 import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
 import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
 import { signUpWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
-import { Error } from "./errors/RegisterPageErrors"
+import { Error, emailRegex } from "./errors/RegisterPageErrors"
 
 
 const RegisterPage: FC<ProfilePageProps> = () => {
@@ -15,8 +15,12 @@ const RegisterPage: FC<ProfilePageProps> = () => {
     const [isVisable, setIsVisable] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [emailTouched, setEmailTouched] = useState<boolean>(false);
-    const [passwordTouched, setPasswordTouched] = useState<boolean>(false);
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+
+
+
+
 
 
 
@@ -26,13 +30,39 @@ const RegisterPage: FC<ProfilePageProps> = () => {
 
     const getEmailValue = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value)
-        setEmailTouched(true)
+        setEmailError(null)
     }
     const getPasswordValue = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value)
-        setPasswordTouched(true)
+        setPasswordError(null)
     }
 
+    const validateInputs = () => {
+        let isValid = true;
+
+        if (!email.trim()) {
+            setEmailError(Error.emptyEmailInput);
+            isValid = false;
+        } else if (!emailRegex.test(email)) {
+            setEmailError(Error.wrongEmail)
+            isValid = false
+        }
+        if (!password.trim()) {
+            setPasswordError(Error.emptyPasswordInput);
+            isValid = false;
+        } else if (password.length < 6) {
+            setPasswordError(Error.shortPassword);
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const handleSignUp = () => {
+        if (validateInputs()) {
+            signUpWithEmail(email, password);
+        }
+    };
 
 
     return (
@@ -48,13 +78,10 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                             placeholder="Email"
                             className="mb-2"
                             onChange={getEmailValue}
+                            isInvalid={!!emailError}
 
                         />
-                        {
-                            emailTouched && !email.length ?
-                                <div className={styles.error}><p>{Error.emptyEmailInput}</p></div>
-                                : null
-                        }
+                        <p className={styles.error}>{emailError}</p>
                         <InputGroup className="mb-1">
                             <Form.Control
                                 required
@@ -63,6 +90,8 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                                 }
                                 placeholder="Password"
                                 onChange={getPasswordValue}
+                                isInvalid={!!passwordError}
+
                             />
                             <InputGroup.Text className={styles.visableBtn} onClick={handleVisable}>
                                 {
@@ -70,9 +99,12 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                                 }
                             </InputGroup.Text>
                         </InputGroup>
-                        {passwordTouched && !password.length ? <div className={styles.error}><p>{Error.emptyPasswordInput}</p></div> : null}
+                        <p className={styles.error}>{passwordError}</p>
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={() => signUpWithEmail(email, password)}>Sign up</Button>
+                    <Button
+                        className={`${styles.btn} mt-2 mb-4`}
+                        variant="primary"
+                        onClick={handleSignUp}>Sign up</Button>
                     OR
                     <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

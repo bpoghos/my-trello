@@ -22,10 +22,11 @@ const Comment = ({ comment }: { comment: CommentProps }) => {
                         <span>{comment.author.date}</span>
                     </div>
 
-                    <div className={styles.inputContainer}>
-                        <input type="text" value={comment.author.comment} />
+                    <div className={styles.textContainer}>
+                        <p>{comment.author.comment}</p>
                         <div>
                             <Button variant="link">reply</Button>
+                            <Button variant="link">edit</Button>
                         </div>
                     </div>
 
