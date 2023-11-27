@@ -6,7 +6,11 @@ export const START_WITH_A_TEMPLATE_TEXT = "Get started faster with a board templ
 export const CREATE_WOEKSPACE = "Create Workspace"
 export const CREATE_WOEKSPACE_TEXT = "A Workspace is a group of boards and people. Use it to organize your company, side hunstle, family, or friends."
 export const YOUR_WORKSPACES = "Your Workspaces"
+export enum HideHeader {
+    LOGIN = "/login",
+    REGISTER = "/register"
 
+}
 
 
 

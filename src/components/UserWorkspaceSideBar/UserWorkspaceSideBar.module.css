@@ -1,0 +1,21 @@
+.userWorkspaceBtn {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.imageContainer {
+    width: 30px;
+    height: 100%;
+    padding: 5px;
+}
+
+.imageContainer img {
+    background-color: #ccc;
+}
+
+
+.titleContainer p {
+    margin: 0;
+    font-size: 14px;
+}

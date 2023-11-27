@@ -1,15 +1,18 @@
-import { FC, Suspense, lazy, useEffect, useState } from "react";
+import { FC, Suspense, lazy, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import "./styles/index.scss"
 
 import { auth } from "../firebase";
-import { User, onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import Header from "../shared/Header";
-import { ProcessProps, TaskProps, WorkspaceProps } from "./App.interface";
 import Loading from "../components/Loading";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/slices/userSlice";
+import { RootState } from "../redux/store";
+import { HideHeader } from "../shared/constant/constant";
+
 
 
 const MainPage = lazy(() => import("../pages/MainPage"))
@@ -19,22 +22,18 @@ const RegisterPage = lazy(() => import("../pages/RegisterPage"))
 const BoardPage = lazy(() => import("../pages/BoardPage"))
 const HomePage = lazy(() => import("../pages/HomePage"))
 const Workspace = lazy(() => import("../pages/Workspace"))
-const TaskPage = lazy(() => import("../components/Task"))
+
 
 
 
 const App: FC = () => {
 
-
-  const [user, setUser] = useState<User | null>(null)
-
+  const user = useSelector((state: RootState) => state.user.profile)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
 
-  const LOGIN = "/login"
-  const REGISTER = "/register"
-
-  const shouldHideHeader = location.pathname === LOGIN || location.pathname === REGISTER;
+  const shouldHideHeader = location.pathname === HideHeader.LOGIN || location.pathname === HideHeader.REGISTER;
 
 
   const handleSingOut = () => {
@@ -42,10 +41,10 @@ const App: FC = () => {
     navigate("/")
   }
 
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setUser(currentUser)
-
+      dispatch(logOut(currentUser))
     })
     return unsubscribe;
   }, [])

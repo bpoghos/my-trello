@@ -8,6 +8,7 @@ import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
 import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
 import { signInWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
 import { Error, emailRegex } from "../../RegisterPage/ui/errors/RegisterPageErrors"
+import { useAppDispatch } from "../../../hooks/useAppDispatch"
 
 
 const LoginPage: FC<ProfilePageProps> = () => {
@@ -17,6 +18,9 @@ const LoginPage: FC<ProfilePageProps> = () => {
     const [password, setPassword] = useState<string>('')
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
+
+    const dispatch = useAppDispatch()
+
 
     const handleVisable = () => {
         setIsVisable((prevState) => !prevState)
@@ -56,7 +60,7 @@ const LoginPage: FC<ProfilePageProps> = () => {
 
     const handleSignUp = () => {
         if (validateInputs()) {
-            signInWithEmail(email, password);
+            dispatch(signInWithEmail({ email, password }));
         }
     };
 
@@ -99,11 +103,11 @@ const LoginPage: FC<ProfilePageProps> = () => {
                     </Form.Group>
                     <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignUp}>Continue</Button>
                     OR
-                    <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
+                    <Button onClick={() => dispatch(signInWithGoogle())} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>
                             <FaGoogle />
                         </div>Continue with Google</Button>
-                    <Button onClick={signInWithGitHub} className={`${styles.socialBtn} mt-3 mb-3`} variant="light">
+                    <Button onClick={() => dispatch(signInWithGitHub())} className={`${styles.socialBtn} mt-3 mb-3`} variant="light">
                         <div className={styles.iconBox}>
                             <FaGithub />
                         </div>Continue with GitHub</Button>

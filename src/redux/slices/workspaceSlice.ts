@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { ProcessProps, WorkspaceProps } from "./App.interface";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { WorkspaceProps } from "../../app/App.interface";
 
 
 const initialState: { workspace: WorkspaceProps[] } = {
@@ -128,7 +128,7 @@ export const workspaceSlice = createSlice({
     name: "workspace",
     initialState,
     reducers: {
-        updateProcessesOrder: (state, action) => {
+        updateProcessesOrder: (state, action: PayloadAction<any>) => {
             const { singleWorkspace, newColumn } = action.payload;
 
             return {
@@ -146,7 +146,7 @@ export const workspaceSlice = createSlice({
                 }),
             };
         },
-        updateTasksOrder: (state, action) => {
+        updateTasksOrder: (state, action: PayloadAction<any>) => {
             const { singleWorkspace, newDestinationColumn, newsourceProcess } = action.payload;
 
             return {

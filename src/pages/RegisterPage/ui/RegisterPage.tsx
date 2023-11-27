@@ -8,18 +8,20 @@ import { signInWithGoogle } from "../../../shared/signIn/gmailLogin/gmailLogin"
 import { signInWithGitHub } from "../../../shared/signIn/gitHubLogin/gitHubLogin"
 import { signUpWithEmail } from "../../../shared/signIn/emailLogin/emailLogin"
 import { Error, emailRegex } from "./errors/RegisterPageErrors"
+import { useDispatch } from "react-redux"
+import { useAppDispatch } from "../../../hooks/useAppDispatch"
 
 
 const RegisterPage: FC<ProfilePageProps> = () => {
 
     const [isVisable, setIsVisable] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const [password, setPassword] = useState<any>('')
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
 
-
+    const dispatch = useAppDispatch()
 
 
 
@@ -60,7 +62,7 @@ const RegisterPage: FC<ProfilePageProps> = () => {
 
     const handleSignUp = () => {
         if (validateInputs()) {
-            signUpWithEmail(email, password);
+            dispatch(signUpWithEmail({ email, password }));
         }
     };
 

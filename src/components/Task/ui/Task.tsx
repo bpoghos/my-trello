@@ -4,9 +4,12 @@ import { Button } from "react-bootstrap"
 import styles from "./styles/Task.module.css"
 import { ChangeEvent, MouseEventHandler, useState } from "react"
 import Comments from "../../Comments"
+import { useSelector } from "react-redux"
 
 
 const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, setIsOpen: Function }) => {
+
+    const user = useSelector((state: any) => state.user.profile)
 
 
     const [isTextAreaClicked, setIsTextAreaClicked] = useState<boolean>(false)
@@ -15,6 +18,7 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
 
 
 
+    console.log(user);
 
 
     const handleClick = () => {
@@ -49,11 +53,11 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
 
                 <div className={styles.commentBox}>
 
-                    {/* {
-                        user?.photoURL ?
-                            <img alt="profilePic" src={user?.photoURL} />
-                            : user?.displayName
-                    } */}
+                    {
+                        user.photoURL ?
+                            <img alt="profilePic" src={user.photoURL} />
+                            : user.displayName || "user Photo"
+                    }
                     <div className={styles.commentInputBox}>
 
                         <textarea

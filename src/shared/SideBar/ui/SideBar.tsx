@@ -2,7 +2,8 @@ import { FC } from 'react'
 import styles from "./styles/SideBar.module.css"
 import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { FaAngleDown, FaPlus } from 'react-icons/fa6'
+import { FaPlus } from 'react-icons/fa6'
+import UserWorkspaceSideBar from '../../../components/UserWorkspaceSideBar/UserWorkspaceSideBar'
 
 
 
@@ -31,12 +32,7 @@ const SideBar: FC = () => {
                     </div>
                 </div>
 
-                <div className={styles.userWorkspaceBtn}>
-                    <div></div>
-                    <div></div>
-                    <div><FaAngleDown /></div>
-                </div>
-
+                {/* <UserWorkspaceSideBar /> */}
 
             </div>
         </nav>

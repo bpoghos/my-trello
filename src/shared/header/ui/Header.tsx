@@ -15,11 +15,15 @@ import {
     START_WITH_A_TEMPLATE,
     START_WITH_A_TEMPLATE_TEXT
 } from '../../constant/constant'
+import { useSelector } from 'react-redux'
 
 
 
 
-const Header: FC<HeaderProps> = ({ handleSingOut, user }) => {
+const Header: FC<HeaderProps> = ({ handleSingOut }) => {
+
+    const user = useSelector((state: any) => state.user.profile)
+
 
     const navigate = useNavigate()
 

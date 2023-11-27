@@ -1,3 +1,5 @@
+import { User } from "firebase/auth";
+
 export interface TaskProps {
     id: string;
     title: string;
@@ -36,4 +38,11 @@ export interface ProcessProps {
 export interface WorkspaceProps {
     title: string;
     processes: ProcessProps[]
+}
+
+
+export interface InitialStateType {
+    profile: User | null
+    loading: boolean;
+    error: string | null
 }

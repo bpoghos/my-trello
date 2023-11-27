@@ -3,21 +3,24 @@ import { useParams } from "react-router";
 import { ProcessProps, TaskProps, WorkspaceProps } from "../../../app/App.interface";
 import Process from "../../../components/Process";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+// import { RootState } from "../../../redux/store";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
-import { updateProcessesOrder, updateTasksOrder } from "../../../app/workspaceSlice";
+import { updateProcessesOrder, updateTasksOrder } from "../../../redux/slices/workspaceSlice";
 
 const Workspace = () => {
     const params = useParams();
     const { title } = params;
     const dispatch = useDispatch()
-    const { workspace } = useSelector((state: RootState) => state)
+    const { workspace } = useSelector((state: any) => state.workspace)
+
 
 
     const singleWorkspace = workspace.find(
         (ws: WorkspaceProps) => ws.title === title
     );
+
+
 
     const onDragEnd = (result: any) => {
         const { source, destination, draggableId } = result;
@@ -30,10 +33,12 @@ const Workspace = () => {
             return;
         }
 
-        //////
 
-        const sourceProcess: ProcessProps = singleWorkspace?.processes.find((process) => process.title === source.droppableId) as ProcessProps;
-        const destinationColumn: ProcessProps = singleWorkspace?.processes.find((process) => process.title === destination.droppableId) as ProcessProps;
+
+        const sourceProcess: ProcessProps = singleWorkspace.processes.find(
+            (process: ProcessProps) => process.title === source.droppableId) as ProcessProps;
+        const destinationColumn: ProcessProps = singleWorkspace.processes.find(
+            (process: ProcessProps) => process.title === destination.droppableId) as ProcessProps;
 
         const newSourceCards: TaskProps[] = Array.from(sourceProcess?.data as TaskProps[])
         const [removedCard] = newSourceCards.splice(source.index, 1);
@@ -65,7 +70,7 @@ const Workspace = () => {
                 data: newDestinationCards
             }
 
-            console.log({ newsourceProcess, newDestinationColumn });
+
 
             dispatch(updateTasksOrder({
                 singleWorkspace,
@@ -75,7 +80,8 @@ const Workspace = () => {
         }
 
 
-        //////
+
+
     }
     return (
         <Container className="d-flex mt-5">

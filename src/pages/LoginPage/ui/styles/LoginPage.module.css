@@ -45,3 +45,8 @@
     font-size: 12px;
     color: red;
 }
+
+.visableBtn {
+    cursor: pointer;
+    background-color: #fff;
+}
