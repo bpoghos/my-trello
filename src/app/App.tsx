@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../redux/slices/userSlice";
 import { RootState } from "../redux/store";
 import { HideHeader } from "../shared/constant/constant";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { getPost } from "../redux/slices/postSlice";
 
 
 
@@ -33,6 +35,7 @@ const App: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+
   const shouldHideHeader = location.pathname === HideHeader.LOGIN || location.pathname === HideHeader.REGISTER;
 
 
@@ -48,6 +51,8 @@ const App: FC = () => {
     })
     return unsubscribe;
   }, [])
+
+
 
 
 

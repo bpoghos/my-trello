@@ -157,17 +157,6 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
                             <Navbar.Brand href="/" className='p-0'>
                                 <img className={styles.logo} alt='brand-logo' src={logo} />
                             </Navbar.Brand>
-                            <Nav className={`me-auto ${styles.links}`}>
-                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Features" id="basic-nav-dropdown">
-                                </NavDropdown>
-                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Solutions" id="basic-nav-dropdown">
-                                </NavDropdown>
-                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Plans" id="basic-nav-dropdown">
-                                </NavDropdown>
-                                <Nav.Link className={`me-3 ${styles.navLinks}`} href="#link">Pricing</Nav.Link>
-                                <NavDropdown className={`me-3 ${styles.navLinks}`} title="Resources" id="basic-nav-dropdown">
-                                </NavDropdown>
-                            </Nav>
                             <Link to="#"></Link>
                             <div className={styles.btnsContainer}>
                                 <Link to="/login">
