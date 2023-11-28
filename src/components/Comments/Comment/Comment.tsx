@@ -5,7 +5,7 @@ import Reply from "./Reply"
 
 const Comment = ({ comment }: { comment: CommentProps }) => {
 
-
+    const formattedDate = new Date(comment.author.date).toLocaleString();
 
 
     return (
@@ -19,7 +19,7 @@ const Comment = ({ comment }: { comment: CommentProps }) => {
 
                     <div className={styles.info}>
                         <p>{comment.author.name} {comment.author.surname}</p>
-                        <span>{comment.author.date}</span>
+                        <span>{formattedDate}</span>
                     </div>
 
                     <div className={styles.textContainer}>

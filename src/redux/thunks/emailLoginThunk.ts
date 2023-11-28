@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../firebase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 

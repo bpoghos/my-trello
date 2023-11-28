@@ -13,7 +13,7 @@ import { logOut } from "../redux/slices/userSlice";
 import { RootState } from "../redux/store";
 import { HideHeader } from "../shared/constant/constant";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { getPost } from "../redux/slices/postSlice";
+import { getWorkspaceData } from "../redux/thunks/workspaceThunk";
 
 
 
@@ -23,7 +23,7 @@ const ProfilePage = lazy(() => import("../pages/ProfilePage"))
 const RegisterPage = lazy(() => import("../pages/RegisterPage"))
 const BoardPage = lazy(() => import("../pages/BoardPage"))
 const HomePage = lazy(() => import("../pages/HomePage"))
-const Workspace = lazy(() => import("../pages/Workspace"))
+const WorkspacePage = lazy(() => import("../pages/WorkspacePage"))
 
 
 
@@ -31,7 +31,8 @@ const Workspace = lazy(() => import("../pages/Workspace"))
 const App: FC = () => {
 
   const user = useSelector((state: RootState) => state.user.profile)
-  const dispatch = useDispatch()
+  const UserDispatch = useDispatch()
+  const DataDisputch = useAppDispatch()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -44,13 +45,17 @@ const App: FC = () => {
     navigate("/")
   }
 
+  useEffect(() => {
+    DataDisputch(getWorkspaceData())
+  }, [DataDisputch])
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      dispatch(logOut(currentUser))
+      UserDispatch(logOut(currentUser))
     })
     return unsubscribe;
-  }, [])
+  }, [UserDispatch])
 
 
 
@@ -69,8 +74,8 @@ const App: FC = () => {
           <Route path="/login" element={user ? <Navigate to={"/home"} replace /> : <LoginPage user={user} />} />
           <Route path="/register" element={user ? <Navigate to={"/home"} replace /> : <RegisterPage user={user} />} />
           <Route path={`/${user?.displayName?.split(' ').join('')}`} element={<ProfilePage user={user} />} />
-          <Route path={`/workspace/:title`} element={<Workspace />} />
-          <Route path={`/workspace/:title/:taskId`} element={<Workspace />} />
+          <Route path={`/workspace/:title`} element={<WorkspacePage />} />
+          <Route path={`/workspace/:title/:taskId`} element={<WorkspacePage />} />
         </Routes>
       </Suspense>
     </div>

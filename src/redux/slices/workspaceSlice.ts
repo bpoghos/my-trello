@@ -1,127 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { WorkspaceProps } from "../../app/App.interface";
+import { addBoard, getWorkspaceData } from "../thunks/workspaceThunk";
+
+interface WorkspaceInitialStateType {
+    workspace: WorkspaceProps[];
+    loading: boolean;
+    error: string | null
+}
 
 
-const initialState: { workspace: WorkspaceProps[] } = {
-    workspace: [
-        {
-            title: "firstWorkSpace",
-            processes: [
-                {
-                    title: "Todo",
-                    data: [
 
-                        {
-                            id: '2',
-                            title: "Task",
-                            description: "You must finish your todo next week",
-                            comments: [
-                                {
-                                    id: '1',
-                                    author: {
-                                        profilePhoto: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
-                                        name: "John",
-                                        surname: "Johnyan",
-                                        comment: "I will do that!",
-                                        date: "21.08.2023"
 
-                                    },
-                                    replies: [
-                                        {
-                                            id: '1',
-                                            profilePhoto: "https://www.kindpng.com/picc/m/78-786678_avatar-hd-png-download.png",
-                                            name: "Mike",
-                                            surname: "Vazovski",
-                                            reply: "OK, I will wait you!!!",
-                                            date: "22.08.2023"
 
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
 
-                    ]
-                },
-                {
-                    title: "Doing",
-                    data: [
-                        {
-                            id: '1',
-                            title: "New Todo",
-                            description: "You must finish your todo next week",
-                            comments: [
-                                {
-                                    id: '1',
-                                    author: {
-                                        profilePhoto: "https://www.kindpng.com/picc/m/78-786678_avatar-hd-png-download.png",
-                                        name: "Mike",
-                                        surname: "Vazovski",
-                                        comment: "I will do that!",
-                                        date: "12.08.2023"
-                                    },
-                                    replies: [
-                                        {
-                                            id: '1',
-                                            profilePhoto: "https://www.kindpng.com/picc/m/78-786678_avatar-hd-png-download.png",
-                                            name: "Mike",
-                                            surname: "Vazovski",
-                                            reply: "OK, I will wait you!!!",
-                                            date: "14.08.2023"
-
-                                        },
-                                        {
-                                            id: '2',
-                                            profilePhoto: "https://w7.pngwing.com/pngs/129/292/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png",
-                                            name: "Lily",
-                                            surname: "Showner",
-                                            reply: "OK, I will wait you!!!",
-                                            date: "15.08.2023"
-
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: '2',
-                                    author: {
-                                        profilePhoto: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
-                                        name: "John",
-                                        surname: "Vazovski",
-                                        comment: "I will do that!",
-                                        date: "18.08.2023"
-
-                                    },
-                                    replies: [
-                                        {
-                                            id: '1',
-                                            profilePhoto: "https://www.kindpng.com/picc/m/78-786678_avatar-hd-png-download.png",
-                                            name: "Mike",
-                                            surname: "Vazovski",
-                                            reply: "OK, I will wait you!!!",
-                                            date: "20.08.2023"
-
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                    ]
-                },
-                {
-                    title: "In testing",
-                    data: []
-                },
-                {
-                    title: "Done",
-                    data: []
-                },
-            ]
-        },
-        {
-            title: "secondWorkSpace",
-            processes: []
-        }
-    ]
+const initialState: WorkspaceInitialStateType = {
+    workspace: [],
+    loading: false,
+    error: null
 }
 
 export const workspaceSlice = createSlice({
@@ -166,6 +61,31 @@ export const workspaceSlice = createSlice({
                 }),
             };
         },
+    },
+    extraReducers: {
+        [getWorkspaceData.pending as any]: (state) => {
+            state.loading = true
+        },
+        [getWorkspaceData.fulfilled as any]: (state, action) => {
+            state.loading = false
+            state.workspace = action.payload
+        },
+        [getWorkspaceData.rejected as any]: (state, action) => {
+            state.loading = false
+            state.error = action.error.message
+        },
+        [addBoard.pending as any]: (state) => {
+            state.loading = true
+        },
+        [addBoard.fulfilled as any]: (state, action) => {
+            state.loading = false
+            state.workspace.push(action.payload)
+        },
+        [addBoard.rejected as any]: (state, action) => {
+            state.loading = false
+            state.error = action.error.message
+        },
+
     }
 });
 export const { updateProcessesOrder, updateTasksOrder } = workspaceSlice.actions

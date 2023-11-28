@@ -13,7 +13,7 @@ const Reply = ({ replies }: { replies: RepliesProps }) => {
 
                 <div className={styles.info}>
                     <p>{replies.name} {replies.surname}</p>
-                    <span>{replies.date}</span>
+                    {/* <span>{replies.date}</span> */}
                 </div>
 
                 <div className={styles.textContainer}>

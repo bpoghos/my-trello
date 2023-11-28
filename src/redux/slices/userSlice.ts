@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { signInWithGoogle } from "../thunks/gmailLogin/gmailLogin";
+import { signInWithGoogle } from "../thunks/gmailLoginThunk";
 import { InitialStateType } from "../../app/App.interface";
-import { signInWithGitHub } from "../thunks/gitHubLogin/gitHubLogin";
-import { signInWithEmail, signUpWithEmail } from "../thunks/emailLogin/emailLogin";
+import { signInWithGitHub } from "../thunks/gitHubLoginThunk";
+import { signInWithEmail, signUpWithEmail } from "../thunks/emailLoginThunk";
+
 
 
 const initialState: InitialStateType = {
@@ -10,6 +11,7 @@ const initialState: InitialStateType = {
     loading: false,
     error: null,
 }
+
 
 
 

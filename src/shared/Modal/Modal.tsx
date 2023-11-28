@@ -8,7 +8,7 @@ interface ModalProps {
   setIsOpen: Function
 }
 
-const Modal: FC<ModalProps> = ({ children, setIsOpen, isOpen }) => {
+const Modal: FC<ModalProps> = ({ children, isOpen }) => {
 
 
   return (

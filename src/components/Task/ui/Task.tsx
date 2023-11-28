@@ -18,7 +18,7 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
 
 
 
-    console.log(user);
+
 
 
     const handleClick = () => {
@@ -37,6 +37,10 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
     const params = useParams()
     const { id } = params
 
+
+    console.log(singleTask?.description);
+
+
     return (
         <div className={styles.taskPage}>
             <div className={styles.taskBox}>
@@ -47,6 +51,7 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
                     <Button onClick={() => setIsOpen(false)}>X</Button>
 
                 </div>
+
 
                 <h5>Description: <p>{singleTask?.description}</p></h5>
                 <h5>Activity</h5>

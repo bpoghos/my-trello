@@ -32,7 +32,7 @@ export interface RepliesProps {
 
 export interface ProcessProps {
     title: string;
-    data: TaskProps[]
+    tasks: TaskProps[]
 }
 
 export interface WorkspaceProps {

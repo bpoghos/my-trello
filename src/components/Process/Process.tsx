@@ -19,7 +19,7 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps, singleWorkspac
 
     useEffect(() => {
         if (taskId) {
-            const currentTask = data.data.find((task: TaskProps) => taskId === task.id)
+            const currentTask = data.tasks.find((task: TaskProps) => taskId === task.id)
             setTask(currentTask)
         }
     }, [])
@@ -36,7 +36,7 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps, singleWorkspac
     >
         <h5>{data.title}</h5>
         {
-            data.data.map((task: TaskProps, index) => {
+            data.tasks.map((task: TaskProps, index) => {
                 return <Draggable key={task.id} draggableId={task.id} index={index}>
                     {
                         (provided) => {

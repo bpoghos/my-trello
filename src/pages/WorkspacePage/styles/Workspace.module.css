@@ -1,0 +1,8 @@
+.addAnotherlistContainer {
+    border-radius: 5px;
+    background-color: rgba(163, 163, 163, 0.6);
+}
+
+.addAnotherlistContainer p {
+    margin: 0;
+}

@@ -1,5 +1,5 @@
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../firebase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const signInWithGitHub = createAsyncThunk(
