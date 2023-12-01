@@ -1,4 +1,4 @@
-import { FC, Suspense, lazy, useEffect } from "react";
+import { FC, Suspense, lazy, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import "./styles/index.scss"
@@ -14,6 +14,7 @@ import { RootState } from "../redux/store";
 import { HideHeader } from "../shared/constant/constant";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { getWorkspaceData } from "../redux/thunks/workspaceThunk";
+import Modal from "../shared/Modal";
 
 
 
@@ -38,7 +39,7 @@ const App: FC = () => {
 
 
   const shouldHideHeader = location.pathname === HideHeader.LOGIN || location.pathname === HideHeader.REGISTER;
-
+  const [searchVal, setSearchVal] = useState<string>('')
 
   const handleSingOut = () => {
     signOut(auth).catch(error => console.log(error))
@@ -58,24 +59,20 @@ const App: FC = () => {
   }, [UserDispatch])
 
 
-
-
-
   return (
     <div className="app">
-      {!shouldHideHeader && <Header handleSingOut={handleSingOut} user={user} />}
+      {!shouldHideHeader && <Header handleSingOut={handleSingOut} user={user} setSearchVal={setSearchVal} />}
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <MainPage />} />
           <Route path="/" element={<MainPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/" element={user ? <BoardPage /> : <MainPage />} />
-          <Route path="/boards" element={<BoardPage />} />
+          <Route path="/" element={user ? <BoardPage searchVal={searchVal} /> : <MainPage />} />
+          <Route path="/boards" element={<BoardPage searchVal={searchVal} />} />
           <Route path="/login" element={user ? <Navigate to={"/home"} replace /> : <LoginPage user={user} />} />
           <Route path="/register" element={user ? <Navigate to={"/home"} replace /> : <RegisterPage user={user} />} />
           <Route path={`/${user?.displayName?.split(' ').join('')}`} element={<ProfilePage user={user} />} />
-          <Route path={`/workspace/:title`} element={<WorkspacePage />} />
-          <Route path={`/workspace/:title/:taskId`} element={<WorkspacePage />} />
+          <Route path={`/workspace/:id`} element={<WorkspacePage searchVal={searchVal} />} />
         </Routes>
       </Suspense>
     </div>

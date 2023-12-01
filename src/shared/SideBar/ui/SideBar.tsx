@@ -18,7 +18,6 @@ const SideBar: FC = () => {
                 <Link to="/boards">
                     <Button variant='light'>Boards</Button>
                 </Link>
-                <Button variant='light'>Templates</Button>
                 <Link to="/home">
                     <Button variant='light'>Home</Button>
                 </Link>
@@ -26,13 +25,10 @@ const SideBar: FC = () => {
                 <div className={styles.workspaces}>
                     <div className={styles.workspacesTitle}>
                         <p>Workspaces</p>
-                        <div className={styles.plusIconContainer}>
-                            <FaPlus />
-                        </div>
                     </div>
                 </div>
 
-                {/* <UserWorkspaceSideBar /> */}
+                <UserWorkspaceSideBar />
 
             </div>
         </nav>

@@ -14,7 +14,7 @@ export const signInWithGitHub = createAsyncThunk(
                 email: result.user.email,
                 photoURL: result.user.photoURL
             }
-            console.log(userData);
+
             return userData
 
         } catch (error) {

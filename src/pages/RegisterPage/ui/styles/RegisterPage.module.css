@@ -17,6 +17,11 @@
     text-align: center;
 }
 
+.title {
+    color: #000;
+    text-decoration: none;
+}
+
 .btn {
     width: 100%;
 }

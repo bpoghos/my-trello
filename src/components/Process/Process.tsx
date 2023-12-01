@@ -1,69 +1,169 @@
-import { Link, useNavigate, useParams } from "react-router-dom"
-import { ProcessProps, TaskProps, WorkspaceProps } from "../../app/App.interface"
-import styles from "./Process.module.css"
-import { FaComment } from "react-icons/fa6"
-import { useEffect, useState } from "react"
-import Modal from "../../shared/Modal"
-import Task from "../Task"
-import { Draggable } from "react-beautiful-dnd"
+import { useParams } from "react-router-dom";
+import { ProcessProps, TaskProps, WorkspaceProps } from "../../app/App.interface";
+import styles from "./Process.module.css";
+import { FaAngleLeft, FaComment, FaList, FaPlus, FaTrash } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import Modal from "../../shared/Modal";
+import Task from "../Task";
+import { Draggable } from "react-beautiful-dnd";
+import { BsThreeDots } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import { addTask, deleteProcess, editProcess, editTask } from "../../redux/slices/workspaceSlice";
+import { AppDispatch } from "../../redux/store";
+import { getProcessData, getTasksData } from "../../redux/thunks/workspaceThunk";
+import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
-const Process = ({ data, singleWorkspace }: { data: ProcessProps, singleWorkspace: WorkspaceProps }) => {
+const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspace: WorkspaceProps }) => {
+    const params = useParams();
+    const dispatch = useDispatch<AppDispatch>()
+    const { taskId } = params;
+    const workspaceId = singleWorkspace.id
+    const processId = data.id
+
+    const tasks = useSelector((state: any) => state.tasks[processId])
+    const [isOpen, setIsOpen] = useState<boolean>(taskId ? true : false);
+    const [openMenu, setOpenMenu] = useState<boolean>(false);
+    const [changeTitleClick, setChangeTitleClick] = useState<boolean>(false);
+    const [title, setTitle] = useState(changeTitleClick ? data.title : '');
+    const [isAddTaskClicked, setIsAddTaskClicked] = useState<boolean>(false)
+    const [taskTitle, setTaskTitle] = useState<string>('')
+    const [singleTask, setSingleTask] = useState<string>('')
 
 
-    const params = useParams()
-    const { taskId } = params
-
-    const navigate = useNavigate()
-    const [isOpen, setIsOpen] = useState<boolean>(taskId ? true : false)
-    const [task, setTask] = useState<TaskProps | undefined>()
 
     useEffect(() => {
-        if (taskId) {
-            const currentTask = data.tasks.find((task: TaskProps) => taskId === task.id)
-            setTask(currentTask)
-        }
-    }, [])
+        dispatch(getTasksData({ workspaceId, processId }))
+    }, [dispatch, processId, workspaceId])
 
 
 
-    const openModal = (task: TaskProps) => {
-        setTask(task)
-        setIsOpen(true)
-        // navigate(`/${task.id}`, { replace: false });
+
+
+    const openModal = (task: any) => {
+        setSingleTask(task);
+        setIsOpen(true);
+    };
+
+    const handleClickChangeTitle = () => {
+        setChangeTitleClick(true);
+    };
+
+    const handleChangeTaskName = (e: any) => {
+        setTaskTitle(e.target.value)
     }
 
-    return (<div className={styles.processColumn}
-    >
-        <h5>{data.title}</h5>
-        {
-            data.tasks.map((task: TaskProps, index) => {
-                return <Draggable key={task.id} draggableId={task.id} index={index}>
-                    {
-                        (provided) => {
-                            return (
+    const handliCreateTaskClick = () => {
+        const payload = {
+            title: taskTitle,
+            description: ''
+        }
+
+        dispatch(addTask({ payload, workspaceId, processId }))
+        dispatch(getTasksData({ workspaceId, processId }))
+        setIsAddTaskClicked(false)
+        setTaskTitle("")
+
+    }
+
+
+
+    const handleAddTaskClick = () => {
+        setIsAddTaskClicked(true)
+    }
+
+    const handleBackIconClick = () => {
+        setIsAddTaskClicked(false)
+    }
+
+
+    const handleBlur = () => {
+        setChangeTitleClick(false);
+
+        const payload: any = {
+            title
+        }
+
+        dispatch(editProcess({ payload, workspaceId, processId }))
+        dispatch(getProcessData(singleWorkspace))
+    };
+
+    const handleDeleteProcess = () => {
+        dispatch(deleteProcess({ workspaceId, processId }))
+        dispatch(getProcessData(singleWorkspace))
+    }
+
+
+
+    return (
+        <div className={styles.processColumn}>
+            <div className={styles.processContent}>
+                <div className={styles.processTitle} onClick={handleClickChangeTitle}>
+                    {changeTitleClick ? (
+                        <input type="text" value={title} autoFocus onChange={(e) => setTitle(e.target.value)} onBlur={handleBlur} />
+                    ) : (
+                        <h5>{data.title}</h5>
+                    )}
+                </div>
+                <div className={styles.menuIconContainer} onClick={() => setOpenMenu((prevState) => !prevState)}>
+                    <BsThreeDots />
+                </div>
+                {openMenu && (
+                    <div className={styles.menuDropDown}>
+                        <div className={styles.menuContent}>
+                            <div className={styles.delete} onClick={handleDeleteProcess}>
+                                <p>Delete</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {
+                tasks && tasks.tasks?.length ? (
+                    tasks.tasks?.map((task: TaskProps, index: any) => (
+                        <Draggable key={task.id} draggableId={task.id} index={index}>
+                            {(provided) => (
                                 <div
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
-                                    className={styles.link} key={task.id}>
+                                    className={styles.link}
+                                    key={task.id}
+                                >
                                     <div className={styles.task} onClick={() => openModal(task)}>
                                         <p>{task.title}</p>
-                                        <span><FaComment /> {task.comments.length}</span>
+                                        {task?.description.length ? <span>
+                                            <FaList /> {tasks.comments}
+                                        </span> : null}
+                                        <span>
+                                            <FaComment /> {tasks.comments}
+                                        </span>
                                     </div>
                                 </div>
-                            )
-                        }}
-                </Draggable>
+                            )}
+                        </Draggable>
+                    ))
+                ) : null}
+            <Modal isOpen={isOpen} setIsOpen={setIsOpen} >
+                <Task data={singleTask} setIsOpen={setIsOpen} workspaceId={workspaceId} processId={processId} />
+            </Modal>
 
-            })
+            {isAddTaskClicked ? (
+                <div className={styles.createTask}>
+                    <input type='text' placeholder="Enter list title..." autoFocus onChange={handleChangeTaskName} />
+                    <div className={styles.createBtnsContainer}>
+                        <Button disabled={!taskTitle ? true : false} onClick={handliCreateTaskClick}>Create</Button>
+                        <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
+                    </div>
+                </div>
+            ) :
+                <div className={styles.addAnotherlistContainer} onClick={handleAddTaskClick}>
+                    <p> <span><FaPlus /></span>{" "} Add a card</p>
+                </div>}
 
-        }
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-            <Task singleTask={task} setIsOpen={setIsOpen} />
-        </Modal>
-    </div>
+        </div>
+    );
+};
 
-    )
-}
-
-export default Process
+export default Process;

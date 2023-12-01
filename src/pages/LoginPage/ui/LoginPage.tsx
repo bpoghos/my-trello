@@ -9,6 +9,7 @@ import { signInWithGitHub } from "../../../redux/thunks/gitHubLoginThunk"
 import { signInWithEmail } from "../../../redux/thunks/emailLoginThunk"
 import { Error, emailRegex } from "../../RegisterPage/ui/errors/RegisterPageErrors"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
+import { useSelector } from "react-redux"
 
 
 const LoginPage: FC<ProfilePageProps> = () => {
@@ -19,8 +20,10 @@ const LoginPage: FC<ProfilePageProps> = () => {
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
-    const dispatch = useAppDispatch()
+    const error = useSelector((state: any) => state.user.error)
 
+
+    const dispatch = useAppDispatch()
 
     const handleVisable = () => {
         setIsVisable((prevState) => !prevState)
@@ -46,6 +49,9 @@ const LoginPage: FC<ProfilePageProps> = () => {
         } else if (!emailRegex.test(email)) {
             setEmailError(Error.wrongEmail)
             isValid = false
+        } else if (error) {
+            setEmailError(Error.emailNotRegistered);
+            isValid = false;
         }
         if (!password.trim()) {
             setPasswordError(Error.emptyPasswordInput);
@@ -55,10 +61,11 @@ const LoginPage: FC<ProfilePageProps> = () => {
             isValid = false;
         }
 
+
         return isValid;
     };
 
-    const handleSignUp = () => {
+    const handleSignIn = () => {
         if (validateInputs()) {
             dispatch(signInWithEmail({ email, password }));
         }
@@ -68,8 +75,14 @@ const LoginPage: FC<ProfilePageProps> = () => {
     return (
         <div className={styles.loginPage}>
             <div className={styles.box}>
+
+                {
+
+                }
                 <Container>
-                    <h1>Trello</h1>
+                    <Link to="/" className={styles.title}>
+                        <h1>Trello</h1>
+                    </Link>
                     <p>Log in to continue</p>
                     <Form.Group>
                         <Form.Control
@@ -101,7 +114,7 @@ const LoginPage: FC<ProfilePageProps> = () => {
                             passwordError ? <p className={styles.error}>{passwordError}</p> : null
                         }
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignUp}>Continue</Button>
+                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignIn}>Continue</Button>
                     OR
                     <Button onClick={() => dispatch(signInWithGoogle())} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

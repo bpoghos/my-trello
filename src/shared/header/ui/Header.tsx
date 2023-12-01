@@ -20,7 +20,7 @@ import { FaAngleLeft } from 'react-icons/fa6'
 
 
 
-const Header: FC<HeaderProps> = ({ handleSingOut }) => {
+const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
 
     const user = useSelector((state: any) => state.user.profile)
     const dispatch = useAppDispatch()
@@ -31,6 +31,10 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
     const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false)
     const [title, setTitle] = useState<string>("")
     const [createBoard, setCreateBoard] = useState<boolean>(false)
+    const workspace = useSelector((state: any) => state.workspace.workspace)
+
+
+
 
 
     const openDropDown = () => {
@@ -51,16 +55,17 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
 
 
 
+
     const handleCreateBoard = () => {
-        const postData: WorkspaceProps = {
+        const postData: any = {
             title,
-            processes: []
         };
 
         dispatch(addBoard(postData));
         setTitle("");
         setCreateBoard(false)
-        navigate(`/workspace/${title}`)
+        setIsCreateOpen(false)
+        // navigate(`/workspace/${data.payload.id}`)
 
     };
 
@@ -87,7 +92,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
                             <div className={styles.menuIconContainer}>
                                 <BsFillGrid3X3GapFill />
                             </div>
-                            <Navbar.Brand href="/home">
+                            <Navbar.Brand href="/boards">
                                 <div className={styles.logoUserContainer}>
                                     <img className={styles.logoUser} alt='brand-logo' src={logo_user} />
                                 </div>
@@ -99,17 +104,26 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
                                         <p>{user.displayName}'s Workspace</p>
                                     </NavDropdown.Item>
                                 </NavDropdown>
-                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Solutions" id="basic-nav-dropdown">
-                                </NavDropdown>
-                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Plans" id="basic-nav-dropdown">
-                                </NavDropdown>
-                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Resources" id="basic-nav-dropdown">
+                                <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Recent" id="basic-nav-dropdown">
+                                    {
+                                        workspace.map((board: WorkspaceProps) => {
+                                            return <NavDropdown.Item className={styles.boardLink} key={board.title}>
+                                                <Link to={`/workspace/${board.id}`} className={styles.recentContainer}>
+                                                    <div className={styles.boardPhoto}>
+                                                        <p>{board.title}</p>
+                                                    </div>
+                                                    <p>{board.title}</p>
+                                                </Link>
+                                            </NavDropdown.Item>
+                                        })
+                                    }
                                 </NavDropdown>
                                 <Button size='sm' className='me-auto' onClick={openCreateDropDown}>{CREATE}</Button>
                             </Nav>
                             <div className={styles.searchContainer}>
                                 <Form.Control
                                     type='text'
+                                    onChange={(e) => setSearchVal(e.target.value)}
                                     placeholder={`Search`}
                                     className={styles.searchInput}
                                 />
@@ -136,7 +150,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut }) => {
                                         <div className={styles.createBoardPage}>
                                             <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
                                             <p aria-required>Board title<span>*</span></p>
-                                            <input type='text' onChange={handleBoardNameChange} />
+                                            <input type='text' onChange={handleBoardNameChange} autoFocus />
                                             <Button disabled={!title ? true : false} onClick={handleCreateBoard}>Create</Button>
                                         </div>
                                     </div> : null

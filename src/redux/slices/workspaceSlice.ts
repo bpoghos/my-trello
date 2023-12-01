@@ -1,6 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { WorkspaceProps } from "../../app/App.interface";
-import { addBoard, getWorkspaceData } from "../thunks/workspaceThunk";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { ProcessProps, WorkspaceProps } from "../../app/App.interface";
+import { addBoard, getProcessData, getWorkspaceData } from "../thunks/workspaceThunk";
+import { addDoc, collection, deleteDoc, doc, setDoc } from "@firebase/firestore";
+import { db } from "../../firebase";
+import { log } from "console";
 
 interface WorkspaceInitialStateType {
     workspace: WorkspaceProps[];
@@ -8,6 +11,105 @@ interface WorkspaceInitialStateType {
     error: string | null
 }
 
+export const addProcess: any = createAsyncThunk(
+    'process/addProcess',
+    async ({ payload, id }: { payload: any, id: any }) => {
+
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const docRef = await addDoc(collection(db, "workspace", id, "processes"), payload)
+            return { id: docRef.id, ...payload }
+
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    }
+)
+
+
+export const addTask = createAsyncThunk(
+    "task/addTask",
+    async ({ payload, workspaceId, processId }: { payload: any; workspaceId: string; processId: string }) => {
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const docRef = await addDoc(collection(db, "workspace", workspaceId, "processes", processId, "tasks"), payload)
+            return { id: docRef.id, ...payload }
+
+
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    }
+)
+
+
+export const editTask = createAsyncThunk(
+    "task/editTask",
+    async ({ payload, workspaceId, processId, taskId }: { payload: any; workspaceId: string; processId: string, taskId: any }) => {
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const taskRef = doc(db, 'workspace', workspaceId, 'processes', processId, "tasks", taskId);
+            await setDoc(taskRef, payload, { merge: true });
+            return { processId, ...payload };
+
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    }
+)
+
+
+export const editProcess = createAsyncThunk(
+    'process/editProcess',
+    async ({ payload, workspaceId, processId }: { payload: any; workspaceId: string; processId: string }) => {
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const processRef = doc(db, 'workspace', workspaceId, 'processes', processId);
+            await setDoc(processRef, payload, { merge: true });
+            return { processId, ...payload };
+        } catch (err) {
+            console.error('Error editing process:', err);
+            throw err;
+        }
+    }
+);
+
+export const deleteProcess = createAsyncThunk(
+    'blog/deleteProcess',
+    async ({ workspaceId, processId }: { workspaceId: string; processId: string }) => {
+        try {
+            const processRef = doc(db, 'workspace', workspaceId, 'processes', processId);
+            await deleteDoc(processRef);
+
+            return { workspaceId, processId };
+        } catch (err) {
+            console.error('Error deleting process:', err);
+            throw err;
+        }
+    }
+);
 
 
 
@@ -22,46 +124,7 @@ const initialState: WorkspaceInitialStateType = {
 export const workspaceSlice = createSlice({
     name: "workspace",
     initialState,
-    reducers: {
-        updateProcessesOrder: (state, action: PayloadAction<any>) => {
-            const { singleWorkspace, newColumn } = action.payload;
-
-            return {
-                ...state,
-                workspace: state.workspace.map((workspaceItem) => {
-                    if (workspaceItem.title === singleWorkspace.title) {
-                        return {
-                            ...workspaceItem,
-                            processes: workspaceItem.processes.map((process) =>
-                                process.title === newColumn.title ? newColumn : process
-                            ),
-                        };
-                    }
-                    return workspaceItem;
-                }),
-            };
-        },
-        updateTasksOrder: (state, action: PayloadAction<any>) => {
-            const { singleWorkspace, newDestinationColumn, newsourceProcess } = action.payload;
-
-            return {
-                ...state,
-                workspace: state.workspace.map((workspaceItem) => {
-                    if (workspaceItem.title === singleWorkspace.title) {
-                        return {
-                            ...workspaceItem,
-                            processes: workspaceItem.processes.map((process) => {
-                                if (process.title === newsourceProcess.title) return newsourceProcess;
-                                if (process.title === newDestinationColumn.title) return newDestinationColumn;
-                                return process;
-                            }),
-                        };
-                    }
-                    return workspaceItem;
-                }),
-            };
-        },
-    },
+    reducers: {},
     extraReducers: {
         [getWorkspaceData.pending as any]: (state) => {
             state.loading = true
@@ -85,9 +148,19 @@ export const workspaceSlice = createSlice({
             state.loading = false
             state.error = action.error.message
         },
+        [addProcess.pending as any]: (state) => {
+            state.loading = true
+        },
+        [addProcess.fulfilled as any]: (state, action) => {
+            state.loading = false
+            state.workspace.push(action.payload)
+        },
+        [addProcess.rejected as any]: (state, action) => {
+            state.loading = false
+            state.error = action.error.message
+        },
 
     }
 });
-export const { updateProcessesOrder, updateTasksOrder } = workspaceSlice.actions
 
 export default workspaceSlice.reducer;

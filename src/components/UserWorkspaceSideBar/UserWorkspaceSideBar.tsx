@@ -1,19 +1,29 @@
 import { FC } from "react"
 import styles from "./UserWorkspaceSideBar.module.css"
 import { FaAngleDown } from "react-icons/fa6"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+
 
 const UserWorkspaceSideBar: FC = () => {
+
+    const user = useSelector((state: any) => state.user.profile)
+
+
+
+
     return (
-        <div className={styles.userWorkspaceBtn}>
-            <div className={styles.imageContainer}>
-                <img alt="profilePic" src="" />
+        <Link to={"/boards"}>
+            <div className={styles.userWorkspaceBtn}>
+                <div className={styles.imageContainer}>
+                    <img alt="profilePic" src={user?.photoURL} />
+                </div>
+                <div className={styles.titleContainer}>
+                    <p>Poghos Baarseghyan's</p>
+                    <p>Workspace</p>
+                </div>
             </div>
-            <div className={styles.titleContainer}>
-                <p>Poghos Baarseghyan's</p>
-                <p>Workspace</p>
-            </div>
-            <div><FaAngleDown /></div>
-        </div>
+        </Link>
     )
 }
 

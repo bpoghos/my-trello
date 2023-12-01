@@ -11,6 +11,7 @@ export interface SearchProps {
 
 export interface HeaderProps {
   items?: Item[],
+  setSearchVal: Function,
   handleSingOut: () => void,
   user: User | null
 }

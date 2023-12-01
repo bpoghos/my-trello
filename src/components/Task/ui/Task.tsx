@@ -1,44 +1,69 @@
-import { useParams } from "react-router"
-import { TaskProps } from "../../../app/App.interface"
 import { Button } from "react-bootstrap"
-import styles from "./styles/Task.module.css"
-import { ChangeEvent, MouseEventHandler, useState } from "react"
-import Comments from "../../Comments"
+import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import { editTask } from "../../../redux/slices/workspaceSlice"
+import { useAppDispatch } from "../../../hooks/useAppDispatch"
+import { getTasksData } from "../../../redux/thunks/workspaceThunk"
+import styles from "./styles/Task.module.css"
 
 
-const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, setIsOpen: Function }) => {
+const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefined, setIsOpen: Function, workspaceId: string, processId: string }) => {
 
     const user = useSelector((state: any) => state.user.profile)
 
 
     const [isTextAreaClicked, setIsTextAreaClicked] = useState<boolean>(false)
-    const [isLength, setIsLength] = useState<string>('')
+    const [isDescriptionArea, setIsDescriptionArea] = useState<boolean>(false)
+    const [comment, setComment] = useState<string>('')
     const [isClicked, setIsClicked] = useState<boolean>(false)
+    const [isDescriptionSave, setIsDescriptionSave] = useState<boolean>(false)
+    const [description, setDescription] = useState<string>('')
 
+    const dispatch = useAppDispatch()
 
+    console.log(data);
 
+    const handleEditTask = () => {
+        const payload = {
+            title: data?.title,
+            description,
+        }
 
+        dispatch(editTask({ payload, workspaceId, processId, taskId }))
+    }
 
+    const taskId = data?.id
 
     const handleClick = () => {
         setIsTextAreaClicked(true)
     }
 
+
     const handleWrite = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setIsLength(event.target.value)
+        setComment(event.target.value)
     }
 
     const btnClick: MouseEventHandler<HTMLButtonElement> = () => {
-        setIsClicked(isLength !== '')
+        setIsClicked(comment !== '')
+    }
+
+    const handleDescriptionSaveClick = () => {
+        setIsDescriptionSave((prevState) => !prevState)
+        handleEditTask()
     }
 
 
-    const params = useParams()
-    const { id } = params
+    const handleChangeDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(event.target.value)
+    }
+    const handleDesciptionClick = () => {
+        setIsDescriptionArea(true)
+    }
+    const handleClose = () => {
+        setIsOpen(false);
+        dispatch(getTasksData({ workspaceId, processId }))
+    }
 
-
-    console.log(singleTask?.description);
 
 
     return (
@@ -46,14 +71,52 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
             <div className={styles.taskBox}>
 
                 <div className={styles.titleBox}>
-                    <h4>{singleTask?.title}</h4>
+                    <h4>{data?.title}</h4>
 
-                    <Button onClick={() => setIsOpen(false)}>X</Button>
+                    <Button onClick={handleClose}>X</Button>
 
                 </div>
+                <h5>Description: <p>{data?.description}</p></h5>
+                <div className={styles.descriptionBox}>
+
+                    <div className={styles.descriptionInputBox}>
+                        <div className={styles.emptyBox}></div>
+
+                        {
+
+                            isDescriptionSave ? (
+                                <p className={styles.descriptionText} onClick={handleDescriptionSaveClick}>{description}</p>
+                            ) : (
+                                <div>
+                                    {
+                                        !data?.description.length ?
+                                            <textarea
+                                                placeholder="Write your comment..."
+                                                onClick={handleDesciptionClick}
+                                                onChange={handleChangeDescription}
+                                                value={description}
+                                            /> : null
+                                    }
+                                    {
+                                        isDescriptionArea ? (
+                                            <Button
+                                                className={styles.saveBtn}
+                                                variant="success"
+                                                disabled={!description}
+                                                onClick={handleDescriptionSaveClick}
+                                            >
+                                                Save
+                                            </Button>
+                                        ) : null
+                                    }
+                                </div>
+                            )
+                        }
 
 
-                <h5>Description: <p>{singleTask?.description}</p></h5>
+                    </div>
+
+                </div>
                 <h5>Activity</h5>
 
                 <div className={styles.commentBox}>
@@ -69,13 +132,13 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
                             placeholder="Write your comment..."
                             onClick={handleClick}
                             onChange={handleWrite}
-                            value={isLength} />
+                            value={comment} />
 
                         {
                             isTextAreaClicked ? <Button
                                 className={styles.saveBtn}
                                 variant="success"
-                                disabled={!isLength ? true : false}
+                                disabled={!comment}
                                 onClick={btnClick}>Save</Button>
                                 : null
                         }
@@ -84,7 +147,7 @@ const Task = ({ singleTask, setIsOpen }: { singleTask: TaskProps | undefined, se
 
                 </div>
 
-                <Comments comments={singleTask!.comments} />
+                {/* <Comments comments={data!.comments} /> */}
 
             </div>
         </div>

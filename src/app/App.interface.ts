@@ -32,11 +32,13 @@ export interface RepliesProps {
 
 export interface ProcessProps {
     title: string;
+    id: string,
     tasks: TaskProps[]
 }
 
 export interface WorkspaceProps {
     title: string;
+    id: string;
     processes: ProcessProps[]
 }
 

@@ -10,6 +10,7 @@ import { signUpWithEmail } from "../../../redux/thunks/emailLoginThunk"
 import { Error, emailRegex } from "./errors/RegisterPageErrors"
 import { useDispatch } from "react-redux"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
+import { useSelector } from "react-redux"
 
 
 const RegisterPage: FC<ProfilePageProps> = () => {
@@ -20,8 +21,11 @@ const RegisterPage: FC<ProfilePageProps> = () => {
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
+    const error = useSelector((state: any) => state.user.error)
+
 
     const dispatch = useAppDispatch()
+
 
 
 
@@ -48,6 +52,9 @@ const RegisterPage: FC<ProfilePageProps> = () => {
         } else if (!emailRegex.test(email)) {
             setEmailError(Error.wrongEmail)
             isValid = false
+        } else if (error) {
+            setEmailError(Error.alreadyRegistered)
+            isValid = false
         }
         if (!password.trim()) {
             setPasswordError(Error.emptyPasswordInput);
@@ -56,6 +63,7 @@ const RegisterPage: FC<ProfilePageProps> = () => {
             setPasswordError(Error.shortPassword);
             isValid = false;
         }
+
 
         return isValid;
     };
@@ -71,7 +79,9 @@ const RegisterPage: FC<ProfilePageProps> = () => {
         <div className={styles.loginPage}>
             <div className={styles.box}>
                 <Container>
-                    <h1>Trello</h1>
+                    <Link to="/" className={styles.title}>
+                        <h1>Trello</h1>
+                    </Link>
                     <p>Sign up to continue</p>
                     <Form.Group>
                         <Form.Control

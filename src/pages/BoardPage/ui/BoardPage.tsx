@@ -5,13 +5,13 @@ import { YOUR_WORKSPACES } from "../../../shared/constant/constant"
 import styles from "./BoardPage.module.css"
 
 
-const BoardPage = () => {
+const BoardPage = ({ searchVal }: { searchVal: string }) => {
     return (
         <Container className="mt-5 d-flex">
             <SideBar />
             <div className={styles.workspaceContainer}>
                 <h2 className={styles.title}>{YOUR_WORKSPACES}</h2>
-                <BoardCards />
+                <BoardCards searchVal={searchVal} />
             </div>
 
         </Container>

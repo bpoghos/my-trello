@@ -23,57 +23,52 @@ const userSlice = createSlice({
             state.profile = action.payload
         }
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(signInWithGoogle.pending as any, (state) => {
-                state.loading = true;
-            })
-            .addCase(signInWithGoogle.fulfilled as any, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload;
-            })
-            .addCase(signInWithGoogle.rejected as any, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message
-            })
+    extraReducers: {
 
-            .addCase(signInWithGitHub.pending as any, (state) => {
-                state.loading = true;
-            })
-            .addCase(signInWithGitHub.fulfilled as any, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload;
-            })
-            .addCase(signInWithGitHub.rejected as any, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message
-            })
-
-            .addCase(signInWithEmail.pending as any, (state) => {
-                state.loading = true;
-            })
-            .addCase(signInWithEmail.fulfilled as any, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload;
-            })
-            .addCase(signInWithEmail.rejected as any, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message
-            })
-
-            .addCase(signUpWithEmail.pending as any, (state) => {
-                state.loading = true;
-            })
-            .addCase(signUpWithEmail.fulfilled as any, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload;
-            })
-            .addCase(signUpWithEmail.rejected as any, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message
-            })
-
-
+        [signInWithGoogle.pending as any]: (state) => {
+            state.loading = true;
+        },
+        [signInWithGoogle.fulfilled as any]: (state, action) => {
+            state.loading = false;
+            state.profile = action.payload;
+        },
+        [signInWithGoogle.rejected as any]: (state, action) => {
+            state.loading = false;
+            state.error = action.error.message
+        },
+        [signInWithGitHub.pending as any]: (state) => {
+            state.loading = true;
+        },
+        [signInWithGitHub.fulfilled as any]: (state, action) => {
+            state.loading = false;
+            state.profile = action.payload;
+        },
+        [signInWithGitHub.rejected as any]: (state, action) => {
+            state.loading = false;
+            state.error = action.error.message
+        },
+        [signInWithEmail.pending as any]: (state) => {
+            state.loading = true;
+        },
+        [signInWithEmail.fulfilled as any]: (state, action) => {
+            state.loading = false;
+            state.profile = action.payload;
+        },
+        [signInWithEmail.rejected as any]: (state, action) => {
+            state.loading = false;
+            state.error = action.error.message
+        },
+        [signUpWithEmail.pending as any]: (state) => {
+            state.loading = true;
+        },
+        [signUpWithEmail.fulfilled as any]: (state, action) => {
+            state.loading = false;
+            state.profile = action.payload;
+        },
+        [signUpWithEmail.rejected as any]: (state, action) => {
+            state.loading = false;
+            state.error = action.error.message
+        },
     }
 })
 

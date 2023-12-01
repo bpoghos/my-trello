@@ -31,14 +31,21 @@ export const signUpWithEmail = createAsyncThunk(
 
 export const signInWithEmail = createAsyncThunk(
     "user/signInWithEmail",
-    async ({ email, password }: { email: string, password: string }) => {
+    async ({ email, password }: { email: string, password: string }, { rejectWithValue }) => {
         try {
             const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log('User registered:', userCredential.user);
-            return userCredential.user
+            console.log('User signed in:', userCredential.user);
+            return userCredential.user;
         } catch (err) {
-            console.log('error');
+            if (err instanceof FirebaseError) {
 
+                console.error('Firebase authentication error:', err.message);
+                return rejectWithValue(err.message);
+            } else {
+
+                console.error('Non-Firebase error:', err);
+                return rejectWithValue('Error during sign-in');
+            }
         }
     }
-)
+);
