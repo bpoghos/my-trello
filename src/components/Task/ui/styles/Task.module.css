@@ -4,6 +4,41 @@
     margin-bottom: 30px;
 }
 
+.closeModal {
+    width: 40px;
+    height: 40px;
+}
+
+.title {
+    transition: all 0.3s;
+}
+
+.title:hover {
+    color: #4b4b4b;
+    cursor: pointer;
+}
+
+.titleInput {
+    width: 100%;
+    margin-right: 20px;
+    padding: 5px 10px;
+    font-weight: 700;
+    border-radius: 5px;
+    border: none;
+    background-color: #fff;
+    box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
+}
+
+.titleInput:hover {
+    background-color: #f4f4f4;
+}
+
+.titleInputBox {
+    width: 100%;
+    margin-right: 20px;
+    display: flex;
+}
+
 .titleBox h4 {
     font-weight: 700;
 }
@@ -49,6 +84,7 @@
 }
 
 
+
 .descriptionInputBox textarea {
     width: 100%;
     border-radius: 5px;
@@ -57,7 +93,6 @@
     box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
     margin-bottom: 5px;
     border: none;
-    cursor: pointer;
 }
 
 .descriptionInputBox button {

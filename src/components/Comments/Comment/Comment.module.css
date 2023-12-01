@@ -1,11 +1,16 @@
 .comment {
     width: 100%;
     display: flex;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
+    border-radius: 5px;
     margin-bottom: 20px;
 }
 
 .imageContainer {
     width: 36px;
+    min-width: 36px;
     height: 36px;
     border-radius: 50%;
     margin-right: 10px;
@@ -46,10 +51,44 @@
     margin: 0;
 }
 
-.textContainer button {
+.linkBtns {
     border: none;
     outline: none;
     text-decoration: none;
     color: #8e8e8e;
     font-size: 12px;
+}
+
+
+
+
+.replyBox {
+    display: flex;
+    padding-top: 10px;
+}
+
+.replyBox img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.replyBox textarea {
+    padding: 5px 10px;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background-color: #fff;
+    box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
+    border: none;
+}
+
+.replyInputBox {
+    width: 100%;
+    margin-left: 10px;
+}
+
+
+.saveBtn {
+    margin-right: 10px;
 }

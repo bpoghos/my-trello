@@ -57,6 +57,11 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
 
 
     const handleCreateBoard = () => {
+        const trimmedTitle = title.trim();
+        if (trimmedTitle.length === 0) {
+            alert('Title cannot be empty');
+            return
+        }
         const postData: any = {
             title,
         };
@@ -65,7 +70,6 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
         setTitle("");
         setCreateBoard(false)
         setIsCreateOpen(false)
-        // navigate(`/workspace/${data.payload.id}`)
 
     };
 
@@ -89,9 +93,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                 user ?
                     <Navbar bg="white" variant='light' data-bs-theme="light" className={styles.navBarUser}>
                         <Container fluid className='text-light'>
-                            <div className={styles.menuIconContainer}>
-                                <BsFillGrid3X3GapFill />
-                            </div>
+
                             <Navbar.Brand href="/boards">
                                 <div className={styles.logoUserContainer}>
                                     <img className={styles.logoUser} alt='brand-logo' src={logo_user} />
@@ -127,12 +129,6 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                                     placeholder={`Search`}
                                     className={styles.searchInput}
                                 />
-                                <div className={styles.notificationIconContainer}>
-                                    <BsBell />
-                                </div>
-                                <div className={styles.informationIconContainer}>
-                                    <BsInfoCircle />
-                                </div>
                             </div>
                             {
                                 isCreateOpen ?

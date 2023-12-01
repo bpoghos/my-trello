@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addTask } from "./workspaceSlice"
+import { addTask, editTask } from "./workspaceSlice"
 import { getTasksData } from "../thunks/workspaceThunk"
 
 
@@ -46,7 +46,7 @@ const taskSlice = createSlice({
                 state.loading = true;
                 state[action.meta.arg.processId] = { tasks: [] };
             }
-        },
+        }
     }
 })
 

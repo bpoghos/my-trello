@@ -55,6 +55,49 @@ export const addTask = createAsyncThunk(
 )
 
 
+export const addcomment = createAsyncThunk(
+    "comments/addcomment",
+    async ({ payload, workspaceId, processId, taskId }: { payload: any; workspaceId: string; processId: string, taskId: string }) => {
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const docRef = await addDoc(collection(db, "workspace", workspaceId, "processes", processId, "tasks", taskId, "comments"), payload)
+            return { id: docRef.id, ...payload }
+
+
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    }
+)
+
+export const addReply = createAsyncThunk(
+    "reply/addReply",
+    async ({ payload, workspaceId, processId, taskId, commentId }: { payload: any; workspaceId: string; processId: string, taskId: string, commentId: string }) => {
+        try {
+            if (!payload) {
+                console.error('Error: Payload is undefined.');
+                throw new Error('Invalid payload.');
+            }
+
+            const docRef = await addDoc(collection(db, "workspace", workspaceId, "processes", processId, "tasks", taskId, "comments", commentId, "replieses"), payload)
+            return { id: docRef.id, ...payload }
+
+
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    }
+)
+
+
 export const editTask = createAsyncThunk(
     "task/editTask",
     async ({ payload, workspaceId, processId, taskId }: { payload: any; workspaceId: string; processId: string, taskId: any }) => {

@@ -1,9 +1,14 @@
 .processColumn {
     padding: 20px;
     background-color: #fff;
+    overflow-wrap: break-word;
     border-radius: 5px;
     box-shadow: 1px 1px 8px 1px rgba(34, 60, 80, 0.17);
     width: 300px;
+}
+
+.processTitle {
+    margin-right: 10px;
 }
 
 .processTitle:hover {

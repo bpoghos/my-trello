@@ -1,10 +1,13 @@
 import { Button } from "react-bootstrap"
-import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react"
+import { ChangeEvent, MouseEventHandler, useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
-import { editTask } from "../../../redux/slices/workspaceSlice"
+import { addcomment, editTask } from "../../../redux/slices/workspaceSlice"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
-import { getTasksData } from "../../../redux/thunks/workspaceThunk"
+import { getCommentsData, getProcessData, getTasksData } from "../../../redux/thunks/workspaceThunk"
+
+import { AiOutlineClose } from "react-icons/ai";
 import styles from "./styles/Task.module.css"
+import Comments from "../../Comments"
 
 
 const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefined, setIsOpen: Function, workspaceId: string, processId: string }) => {
@@ -14,55 +17,84 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
 
     const [isTextAreaClicked, setIsTextAreaClicked] = useState<boolean>(false)
     const [isDescriptionArea, setIsDescriptionArea] = useState<boolean>(false)
-    const [comment, setComment] = useState<string>('')
-    const [isClicked, setIsClicked] = useState<boolean>(false)
     const [isDescriptionSave, setIsDescriptionSave] = useState<boolean>(false)
-    const [description, setDescription] = useState<string>('')
+    const [isTitleClick, setIsTitleClick] = useState<boolean>(false)
+    const [description, setDescription] = useState<string>(data?.description || '')
+    const [comment, setComment] = useState<string>('')
+    const [title, setTitle] = useState<string>(data?.title || '')
+
 
     const dispatch = useAppDispatch()
 
-    console.log(data);
 
     const handleEditTask = () => {
-        const payload = {
-            title: data?.title,
-            description,
+        if (title.trim() !== '') {
+            const payload = {
+                title,
+                description,
+            }
+
+            dispatch(editTask({ payload, workspaceId, processId, taskId }))
+        } else {
+            alert('Title cannot be empty');
         }
 
-        dispatch(editTask({ payload, workspaceId, processId, taskId }))
     }
 
+
     const taskId = data?.id
+
 
     const handleClick = () => {
         setIsTextAreaClicked(true)
     }
-
+    const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.target.value)
+    }
 
     const handleWrite = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setComment(event.target.value)
     }
 
-    const btnClick: MouseEventHandler<HTMLButtonElement> = () => {
-        setIsClicked(comment !== '')
+    const handleChangeDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(event.target.value)
     }
-
     const handleDescriptionSaveClick = () => {
         setIsDescriptionSave((prevState) => !prevState)
         handleEditTask()
     }
-
-
-    const handleChangeDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setDescription(event.target.value)
+    const handleSaveTitle = () => {
+        setIsTitleClick(false)
+        handleEditTask()
     }
+
+
+
+
     const handleDesciptionClick = () => {
         setIsDescriptionArea(true)
     }
     const handleClose = () => {
-        setIsOpen(false);
+        setIsOpen(false)
         dispatch(getTasksData({ workspaceId, processId }))
     }
+    console.log(user);
+
+
+
+    const handleAddComment = () => {
+        const payload = {
+            userId: user.uid,
+            userName: user.displayName,
+            userPhoto: user.photoURL,
+            comment,
+            date: Date.now()
+        }
+        dispatch(addcomment({ payload, workspaceId, processId, taskId }))
+        setComment('')
+    }
+
+
 
 
 
@@ -71,12 +103,36 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
             <div className={styles.taskBox}>
 
                 <div className={styles.titleBox}>
-                    <h4>{data?.title}</h4>
+                    {
+                        isTitleClick ? (
+                            <div className={styles.titleInputBox}>
+                                <input
+                                    className={styles.titleInput}
+                                    onChange={handleTitleChange}
+                                    value={title}
+                                    autoFocus
+                                />
+                                <Button
+                                    className={styles.titleSave}
+                                    onClick={handleSaveTitle}
+                                    variant="success"
+                                >Save</Button>
+                            </div>
+                        ) : (
+                            <h4 className={styles.title} onClick={() => setIsTitleClick(true)}>{data?.title}</h4>
+                        )
+                    }
 
-                    <Button onClick={handleClose}>X</Button>
+                    <Button
+                        onClick={handleClose}
+                        className={styles.closeModal}
+                        variant="outline-dark"
+                    >
+                        <AiOutlineClose />
+                    </Button>
 
                 </div>
-                <h5>Description: <p>{data?.description}</p></h5>
+                <h5>Description<p>{data?.description}</p></h5>
                 <div className={styles.descriptionBox}>
 
                     <div className={styles.descriptionInputBox}>
@@ -139,7 +195,7 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
                                 className={styles.saveBtn}
                                 variant="success"
                                 disabled={!comment}
-                                onClick={btnClick}>Save</Button>
+                                onClick={handleAddComment}>Save</Button>
                                 : null
                         }
 
@@ -147,7 +203,7 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
 
                 </div>
 
-                {/* <Comments comments={data!.comments} /> */}
+                <Comments workspaceId={workspaceId} processId={processId} taskId={taskId} />
 
             </div>
         </div>

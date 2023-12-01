@@ -17,8 +17,11 @@ export interface AuthorProps {
 
 export interface CommentProps {
     id: string;
-    author: AuthorProps;
-    replies: RepliesProps[]
+    userId: string;
+    userPhoto: string;
+    userName: string;
+    comment: string;
+    date: number
 }
 
 export interface RepliesProps {

@@ -56,19 +56,20 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
 
 
     const handliCreateListClick = () => {
+        if (listName.trim() !== '') {
+            const payload: any = {
+                title: listName,
+            }
 
 
-        const payload: any = {
-            title: listName,
+            const { id } = singleWorkspace
+            dispatchProcess(addProcess({ payload, id }))
+            dispatch(getProcessData(singleWorkspace))
+            setListName("")
+            setIsAddListClicked(false)
+        } else {
+            alert('ListName cannot be empty');
         }
-
-
-        const { id } = singleWorkspace
-        dispatchProcess(addProcess({ payload, id }))
-        dispatch(getProcessData(singleWorkspace))
-        setListName("")
-        setIsAddListClicked(false)
-
 
     }
 

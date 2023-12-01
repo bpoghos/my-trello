@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { ProcessProps, TaskProps, WorkspaceProps } from "../../app/App.interface";
 import styles from "./Process.module.css";
 import { FaAngleLeft, FaComment, FaList, FaPlus, FaTrash } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "../../shared/Modal";
 import Task from "../Task";
 import { Draggable } from "react-beautiful-dnd";
@@ -10,7 +10,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { addTask, deleteProcess, editProcess, editTask } from "../../redux/slices/workspaceSlice";
 import { AppDispatch } from "../../redux/store";
-import { getProcessData, getTasksData } from "../../redux/thunks/workspaceThunk";
+import { getCommentsData, getProcessData, getTasksData } from "../../redux/thunks/workspaceThunk";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
@@ -22,6 +22,7 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
     const processId = data.id
 
     const tasks = useSelector((state: any) => state.tasks[processId])
+    const comments = useSelector((state: any) => state.comments.comments)
     const [isOpen, setIsOpen] = useState<boolean>(taskId ? true : false);
     const [openMenu, setOpenMenu] = useState<boolean>(false);
     const [changeTitleClick, setChangeTitleClick] = useState<boolean>(false);
@@ -67,6 +68,23 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
     }
 
 
+    const menuRef: any = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: { target: any; }) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setOpenMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [menuRef]);
+
+
 
     const handleAddTaskClick = () => {
         setIsAddTaskClicked(true)
@@ -79,6 +97,13 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
 
     const handleBlur = () => {
         setChangeTitleClick(false);
+
+        const trimmedTitle = title.trim();
+
+        if (trimmedTitle.length === 0) {
+            alert('Title cannot be empty');
+            return
+        }
 
         const payload: any = {
             title
@@ -109,7 +134,7 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
                     <BsThreeDots />
                 </div>
                 {openMenu && (
-                    <div className={styles.menuDropDown}>
+                    <div ref={menuRef} className={styles.menuDropDown}>
                         <div className={styles.menuContent}>
                             <div className={styles.delete} onClick={handleDeleteProcess}>
                                 <p>Delete</p>
@@ -133,12 +158,8 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
                                 >
                                     <div className={styles.task} onClick={() => openModal(task)}>
                                         <p>{task.title}</p>
-                                        {task?.description.length ? <span>
-                                            <FaList /> {tasks.comments}
-                                        </span> : null}
-                                        <span>
-                                            <FaComment /> {tasks.comments}
-                                        </span>
+                                        {task.description.length ? <span><FaList /></span> : null}
+                                        {comments.length ? <span><FaComment /></span> : null}
                                     </div>
                                 </div>
                             )}
