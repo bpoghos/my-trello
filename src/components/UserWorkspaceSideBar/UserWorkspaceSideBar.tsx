@@ -12,6 +12,7 @@ const UserWorkspaceSideBar: FC = () => {
 
 
 
+
     return (
         <Link to={"/boards"}>
             <div className={styles.userWorkspaceBtn}>
@@ -19,7 +20,7 @@ const UserWorkspaceSideBar: FC = () => {
                     <img alt="profilePic" src={user?.photoURL} />
                 </div>
                 <div className={styles.titleContainer}>
-                    <p>Poghos Baarseghyan's</p>
+                    <p>{user?.displayName}'s</p>
                     <p>Workspace</p>
                 </div>
             </div>
