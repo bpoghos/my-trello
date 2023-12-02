@@ -4,15 +4,15 @@ import Process from "../../../components/Process";
 import { useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
-import { addProcess, editTask } from "../../../redux/slices/workspaceSlice";
 import Loading from "../../../components/Loading";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { FaAngleLeft, FaPlus } from "react-icons/fa6";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { getProcessData, getTasksData } from "../../../redux/thunks/workspaceThunk";
 
 import styles from "../styles/Workspace.module.css"
+import { addProcess, getProcessData } from "../../../redux/thunks/processThunk";
+import { editTask, getTasksData } from "../../../redux/thunks/taskThunk";
 
 const Workspace = ({ searchVal }: { searchVal: string }) => {
 

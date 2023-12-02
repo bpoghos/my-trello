@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { getProcessData } from "../thunks/workspaceThunk"
+import { getProcessData } from "../thunks/processThunk"
 
 
 

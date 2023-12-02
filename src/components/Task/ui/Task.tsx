@@ -1,13 +1,14 @@
 import { Button } from "react-bootstrap"
-import { ChangeEvent, MouseEventHandler, useEffect, useRef, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { useSelector } from "react-redux"
-import { addcomment, editTask } from "../../../redux/slices/workspaceSlice"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
-import { getCommentsData, getProcessData, getTasksData } from "../../../redux/thunks/workspaceThunk"
+
 
 import { AiOutlineClose } from "react-icons/ai";
 import styles from "./styles/Task.module.css"
 import Comments from "../../Comments"
+import { editTask, getTasksData } from "../../../redux/thunks/taskThunk";
+import { addcomment } from "../../../redux/thunks/commentThunk";
 
 
 const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefined, setIsOpen: Function, workspaceId: string, processId: string }) => {

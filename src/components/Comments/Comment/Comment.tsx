@@ -3,10 +3,9 @@ import styles from "./Comment.module.css"
 import { CommentProps } from "../../../app/App.interface"
 import Reply from "./Reply"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
-import { addReply } from "../../../redux/slices/workspaceSlice"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import { getRepliesesData } from "../../../redux/thunks/workspaceThunk"
+import { addReply, getRepliesesData } from "../../../redux/thunks/replyThunk"
 
 const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, workspaceId: any, processId: any, taskId: any }) => {
     const user = useSelector((state: any) => state.user.profile)
@@ -118,8 +117,8 @@ const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, wo
                                 ) : (
                                     <>
                                         <Button variant="link" className={styles.linkBtns} onClick={handleReplyBtnClick}>reply</Button>
-                                        <Button variant="link" className={styles.linkBtns}>edit</Button>
-                                        <Button variant="link" className={styles.linkBtns}>delete</Button>
+                                        {/* <Button variant="link" className={styles.linkBtns}>edit</Button>
+                                        <Button variant="link" className={styles.linkBtns}>delete</Button> */}
                                     </>
                                 )
                             }

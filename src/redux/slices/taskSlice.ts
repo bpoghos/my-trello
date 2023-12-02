@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addTask, editTask } from "./workspaceSlice"
-import { getTasksData } from "../thunks/workspaceThunk"
+import { addTask, getTasksData } from "../thunks/taskThunk"
 
 
 const initialState: any = {

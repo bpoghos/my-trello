@@ -8,11 +8,12 @@ import Task from "../Task";
 import { Draggable } from "react-beautiful-dnd";
 import { BsThreeDots } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { addTask, deleteProcess, editProcess } from "../../redux/slices/workspaceSlice";
 import { AppDispatch } from "../../redux/store";
-import { getCommentsData, getProcessData, getTasksData } from "../../redux/thunks/workspaceThunk";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { getCommentsData } from "../../redux/thunks/commentThunk";
+import { addTask, getTasksData } from "../../redux/thunks/taskThunk";
+import { deleteProcess, editProcess, getProcessData } from "../../redux/thunks/processThunk";
 
 const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspace: WorkspaceProps }) => {
     const params = useParams();

@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addcomment } from "./workspaceSlice"
-import { getCommentsData } from "../thunks/workspaceThunk"
-
-
-
+import { addcomment, getCommentsData } from "../thunks/commentThunk"
 
 
 

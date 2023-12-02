@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Button, Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-import { HeaderProps } from './Header.interface'
+// import { HeaderProps } from './Header.interface'
 import logo from "./images/trello_logo_2.png"
 import logo_user from "./images/Trello_logo_user.png"
 import styles from "./styles/Header.module.css"
@@ -13,8 +13,8 @@ import {
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { WorkspaceProps } from '../../../app/App.interface'
-import { addBoard } from '../../../redux/thunks/workspaceThunk'
 import { FaAngleLeft } from 'react-icons/fa6'
+import { addBoard } from '../../../redux/thunks/boardThunk'
 
 
 

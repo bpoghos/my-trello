@@ -4,7 +4,7 @@ import { CommentProps } from "../../app/App.interface"
 import { useSelector } from "react-redux"
 import { useEffect } from "react"
 import { useAppDispatch } from "../../hooks/useAppDispatch"
-import { getCommentsData } from "../../redux/thunks/workspaceThunk"
+import { getCommentsData } from "../../redux/thunks/commentThunk"
 
 const Comments = ({ workspaceId, processId, taskId }: { workspaceId: any, processId: any, taskId: any }) => {
 

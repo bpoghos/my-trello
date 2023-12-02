@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addReply } from "./workspaceSlice"
-import { getRepliesesData } from "../thunks/workspaceThunk"
+import { addReply, getRepliesesData } from "../thunks/replyThunk"
 
 
 

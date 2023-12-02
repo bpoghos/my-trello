@@ -1,14 +1,14 @@
-import { Button } from 'react-bootstrap'
+// import { Button } from 'react-bootstrap'
 import styles from "./Reply.module.css"
-import { RepliesProps } from '../../../../app/App.interface'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+// import { RepliesProps } from '../../../../app/App.interface'
+// import { useState } from 'react'
+// import { useSelector } from 'react-redux'
 
 const Reply = ({ replies, handleReplyComment }: { replies: any, handleReplyComment: any }) => {
 
-    const user = useSelector((state: any) => state.user.profile)
-    const [isReplyBtnClick, setIsReplyBtnClick] = useState<boolean>(false)
-    const [reply, setReply] = useState<string>("")
+    // const user = useSelector((state: any) => state.user.profile)
+    // const [isReplyBtnClick, setIsReplyBtnClick] = useState<boolean>(false)
+    // const [reply, setReply] = useState<string>("")
 
 
 
@@ -16,18 +16,18 @@ const Reply = ({ replies, handleReplyComment }: { replies: any, handleReplyComme
     const formattedDate = new Date(replies.date).toLocaleString();
 
 
-    const handleReplyBtnClick = () => {
-        setIsReplyBtnClick(true)
-    }
+    // const handleReplyBtnClick = () => {
+    //     setIsReplyBtnClick(true)
+    // }
 
-    const handleReplyWrite = (e: any) => {
-        setReply(e.target.value)
-    }
+    // const handleReplyWrite = (e: any) => {
+    //     setReply(e.target.value)
+    // }
 
-    const handleCancelReply = () => {
-        setIsReplyBtnClick(false)
+    // const handleCancelReply = () => {
+    //     setIsReplyBtnClick(false)
 
-    }
+    // }
 
     return (
         <div className={styles.reply}>
@@ -45,7 +45,7 @@ const Reply = ({ replies, handleReplyComment }: { replies: any, handleReplyComme
                 <div className={styles.textContainer}>
                     <p>{replies.reply}</p>
                     <div>
-                        <Button variant="link" className={styles.linkBtns}>edit</Button>
+                        {/* <Button variant="link" className={styles.linkBtns}>edit</Button> */}
 
                     </div>
                 </div>
