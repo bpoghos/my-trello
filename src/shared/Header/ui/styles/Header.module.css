@@ -239,6 +239,11 @@
     margin: 5px;
 }
 
+.noBoards {
+    margin: 0;
+    margin-left: 10px;
+}
+
 .createBoardPage {
     margin-top: 10px;
     border-radius: 5px;

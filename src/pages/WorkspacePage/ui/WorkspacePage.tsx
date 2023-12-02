@@ -94,8 +94,7 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
             return;
         }
 
-        const tasksById = tasks[source.droppableId]; // vercraci taskern en
-
+        const tasksById = tasks[source.droppableId]
         const updatedTaskData = tasksById.tasks.find((task: TaskProps) => task.id === draggableId);
         console.log(updatedTaskData);
 

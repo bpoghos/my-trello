@@ -38,8 +38,8 @@ const App: FC = () => {
   const location = useLocation()
 
   const photos = [
-    { id: 1, name: 'photo1', imageUrl: "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg" },
-    { id: 2, name: 'photo2', imageUrl: "https://wallpapersmug.com/download/2880x1800/26df45/forest-fog-tree-nature-montana.jpg" },
+    { id: 1, name: 'photo1', imageUrl: "https://wallpapersmug.com/download/2880x1800/26df45/forest-fog-tree-nature-montana.jpg" },
+    { id: 2, name: 'photo2', imageUrl: "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg" },
     { id: 3, name: 'photo3', imageUrl: "https://wallpapersmug.com/download/2880x1800/e235f6/cloudy-day-metropolis-city.jpg" },
     { id: 4, name: 'photo4', imageUrl: "https://s3.us-west-1.wasabisys.com/ft-backgrounds/-mreflowMatt_Wolfe_a_colorful_digital_background_477e314c-c8c2-4491-88d5-1194cd417006.jpeg" }
   ]

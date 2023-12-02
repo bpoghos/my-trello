@@ -7,7 +7,7 @@ const BoardCard = ({ data }: { data: WorkspaceProps }) => {
     return (
         <Link to={`/workspace/${data.id}`} className={styles.link}>
             <div className={styles.card}>
-                <img alt="backImage" src={data.image} />
+                <img alt="backImage" src={data.image} loading="lazy" />
                 <h5>{data.title}</h5>
             </div>
         </Link>

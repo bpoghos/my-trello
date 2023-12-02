@@ -154,17 +154,20 @@ const Header = ({ handleSingOut, setSearchVal, photos }: { handleSingOut: any, s
                                 </NavDropdown>
                                 <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Recent" id="basic-nav-dropdown">
                                     {
-                                        workspace.map((board: WorkspaceProps) => {
+
+                                        workspace.length ? workspace.map((board: WorkspaceProps) => {
                                             return <NavDropdown.Item className={styles.boardLink} key={board.title}>
-                                                <Link to={`/workspace/${board.id}`} className={styles.recentContainer}>
-                                                    <div className={styles.boardPhoto}>
-                                                        <img alt='backPhoto' src={board.image} loading='lazy' />
+                                                {
+                                                    <Link to={`/workspace/${board.id}`} className={styles.recentContainer}>
+                                                        <div className={styles.boardPhoto}>
+                                                            <img alt='backPhoto' src={board.image} loading='lazy' />
+                                                            <p>{board.title}</p>
+                                                        </div>
                                                         <p>{board.title}</p>
-                                                    </div>
-                                                    <p>{board.title}</p>
-                                                </Link>
+                                                    </Link>
+                                                }
                                             </NavDropdown.Item>
-                                        })
+                                        }) : <p className={styles.noBoards}>No Boards</p>
                                     }
                                 </NavDropdown>
                                 <Button size='sm' className='me-auto' onClick={openCreateDropDown}>{CREATE}</Button>
