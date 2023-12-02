@@ -105,13 +105,16 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                                 isInvalid={!!passwordError}
 
                             />
+
                             <InputGroup.Text className={styles.visableBtn} onClick={handleVisable}>
                                 {
                                     isVisable ? <FaEye /> : <FaEyeSlash />
                                 }
                             </InputGroup.Text>
                         </InputGroup>
-                        <p className={styles.error}>{passwordError}</p>
+                        {
+                            passwordError ? <p className={styles.error}>{passwordError}</p> : null
+                        }
                     </Form.Group>
                     <Button
                         className={`${styles.btn} mt-2 mb-4`}

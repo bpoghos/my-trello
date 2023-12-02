@@ -17,7 +17,7 @@ const UserWorkspaceSideBar: FC = () => {
         <Link to={"/boards"}>
             <div className={styles.userWorkspaceBtn}>
                 <div className={styles.imageContainer}>
-                    <img alt="profilePic" src={user?.photoURL} />
+                    <img alt="profilePic" src={user?.photoURL} loading='lazy' />
                 </div>
                 <div className={styles.titleContainer}>
                     <p>{user?.displayName}'s</p>

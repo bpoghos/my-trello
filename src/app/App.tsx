@@ -37,6 +37,15 @@ const App: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const photos = [
+    { id: 1, name: 'photo1', imageUrl: "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg" },
+    { id: 2, name: 'photo2', imageUrl: "https://wallpapersmug.com/download/2880x1800/26df45/forest-fog-tree-nature-montana.jpg" },
+    { id: 3, name: 'photo3', imageUrl: "https://wallpapersmug.com/download/2880x1800/e235f6/cloudy-day-metropolis-city.jpg" },
+    { id: 4, name: 'photo4', imageUrl: "https://s3.us-west-1.wasabisys.com/ft-backgrounds/-mreflowMatt_Wolfe_a_colorful_digital_background_477e314c-c8c2-4491-88d5-1194cd417006.jpeg" }
+  ]
+
+
+
 
   const shouldHideHeader = location.pathname === HideHeader.LOGIN || location.pathname === HideHeader.REGISTER;
   const [searchVal, setSearchVal] = useState<string>('')
@@ -61,7 +70,10 @@ const App: FC = () => {
 
   return (
     <div className="app">
-      {!shouldHideHeader && <Header handleSingOut={handleSingOut} user={user} setSearchVal={setSearchVal} />}
+
+
+
+      {!shouldHideHeader && <Header handleSingOut={handleSingOut} setSearchVal={setSearchVal} photos={photos} />}
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <MainPage />} />
@@ -69,8 +81,8 @@ const App: FC = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={user ? <BoardPage searchVal={searchVal} /> : <MainPage />} />
           <Route path="/boards" element={<BoardPage searchVal={searchVal} />} />
-          <Route path="/login" element={user ? <Navigate to={"/home"} replace /> : <LoginPage user={user} />} />
-          <Route path="/register" element={user ? <Navigate to={"/home"} replace /> : <RegisterPage user={user} />} />
+          <Route path="/login" element={user ? <Navigate to={"/boards"} replace /> : <LoginPage user={user} />} />
+          <Route path="/register" element={user ? <Navigate to={"/boards"} replace /> : <RegisterPage user={user} />} />
           <Route path={`/${user?.displayName?.split(' ').join('')}`} element={<ProfilePage user={user} />} />
           <Route path={`/workspace/:id`} element={<WorkspacePage searchVal={searchVal} />} />
         </Routes>

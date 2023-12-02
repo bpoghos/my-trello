@@ -32,7 +32,7 @@ const Reply = ({ replies, handleReplyComment }: { replies: any, handleReplyComme
     return (
         <div className={styles.reply}>
             <div className={styles.imageContainer}>
-                <img alt="profilePic" src={replies.userPhoto} />
+                <img alt="profilePic" src={replies.userPhoto} loading='lazy' />
             </div>
 
             <div className={styles.replyContainer}>

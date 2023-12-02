@@ -42,12 +42,13 @@ export interface ProcessProps {
 export interface WorkspaceProps {
     title: string;
     id: string;
+    image: string;
     processes: ProcessProps[]
 }
 
 
 export interface InitialStateType {
-    profile: User | null
+    profile: User | null;
     loading: boolean;
     error: string | null
 }

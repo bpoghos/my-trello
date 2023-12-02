@@ -1,6 +1,23 @@
+.workspace {
+    display: flex;
+    padding: 30px;
+}
+
 .processes {
     margin-left: 12px;
 }
+
+.backgroundImage {
+    position: absolute;
+    z-index: -1;
+}
+
+.backgroundImage img {
+    width: 100%;
+    margin-top: -60px;
+    height: auto;
+}
+
 
 .addAnotherlistContainer {
     width: 300px;
@@ -11,7 +28,7 @@
     padding: 20px;
     margin-left: 12px;
     border-radius: 5px;
-    background-color: #c0c1c1;
+    background-color: rgb(0 0 0 / 67%);
     color: #fff;
 }
 

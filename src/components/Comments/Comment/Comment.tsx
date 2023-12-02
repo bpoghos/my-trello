@@ -30,8 +30,6 @@ const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, wo
 
     const formattedDate = new Date(comment.date).toLocaleString();
 
-    console.log(replieses);
-
 
     const handleReplyBtnClick = () => {
         setIsReplyBtnClick(true)
@@ -67,7 +65,7 @@ const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, wo
         <>
             <div className={styles.comment}>
                 <div className={styles.imageContainer}>
-                    <img alt="profilePic" src={comment.userPhoto} />
+                    <img alt="profilePic" src={comment.userPhoto} loading='lazy' />
                 </div>
 
                 <div className={styles.commentContainer}>
@@ -86,7 +84,7 @@ const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, wo
 
                                         {
                                             user.photoURL ?
-                                                <img alt="profilePic" src={user.photoURL} />
+                                                <img alt="profilePic" src={user.photoURL} loading='lazy' />
                                                 : user.displayName || "user Photo"
                                         }
                                         <div className={styles.replyInputBox}>

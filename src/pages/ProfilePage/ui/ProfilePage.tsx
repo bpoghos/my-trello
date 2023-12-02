@@ -21,6 +21,7 @@ const ProfilePage: FC<ProfilePageProps> = () => {
                         <img
                             alt='profilePic'
                             src={user.photoURL}
+                            loading='lazy'
                         />
                         :
                         user?.displayName

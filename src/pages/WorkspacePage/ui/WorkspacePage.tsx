@@ -82,7 +82,6 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
 
     const onDragEnd = (result: any) => {
         const { source, destination, draggableId } = result;
-        console.log({ source, destination, draggableId });
         if (!destination) {
             return;
         }
@@ -107,7 +106,6 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
                 ...sourceProcess,
                 tasks: newSourceCards,
             };
-            console.log({ newColumn });
 
         } else {
             const newDestinationCards: TaskProps[] = Array.from(destinationColumn.tasks);
@@ -122,9 +120,13 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
                 ...destinationColumn,
                 tasks: newDestinationCards
             }
-            console.log({ newsourceProcess, newDestinationColumn });
+
         }
     }
+
+
+
+
 
     const renderProcesses = () => {
         if (searchVal.length > 0) {
@@ -162,29 +164,34 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
 
 
     return (
-        <div className="d-flex mt-5">
-            {
-                loading ? <Loading />
-                    :
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        {renderProcesses()}
-                    </DragDropContext>
-            }
+        <>
+            <div className={styles.backgroundImage}>
+                <img src={singleWorkspace?.image} alt="backPhoto" />
+            </div>
+            <div className={styles.workspace}>
+                {
+                    loading ? <Loading />
+                        :
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            {renderProcesses()}
+                        </DragDropContext>
+                }
 
-            {
-                isAddListClicked ? (
-                    <div className={styles.createList}>
-                        <input type='text' placeholder="Enter list title..." autoFocus onChange={handleChangeListName} />
-                        <div className={styles.createBtnsContainer}>
-                            <Button disabled={!id ? true : false} onClick={handliCreateListClick}>Create</Button>
-                            <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
+                {
+                    isAddListClicked ? (
+                        <div className={styles.createList}>
+                            <input type='text' placeholder="Enter list title..." autoFocus onChange={handleChangeListName} />
+                            <div className={styles.createBtnsContainer}>
+                                <Button disabled={!id ? true : false} onClick={handliCreateListClick}>Create</Button>
+                                <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
+                            </div>
                         </div>
+                    ) : <div className={styles.addAnotherlistContainer} onClick={handleAddListClick}>
+                        <p><span><FaPlus /></span> Add another list</p>
                     </div>
-                ) : <div className={styles.addAnotherlistContainer} onClick={handleAddListClick}>
-                    <p><span><FaPlus /></span> Add another list</p>
-                </div>
-            }
-        </div >
+                }
+            </div >
+        </>
     );
 };
 

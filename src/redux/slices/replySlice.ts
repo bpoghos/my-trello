@@ -37,7 +37,6 @@ const replySlice = createSlice({
         },
         [getRepliesesData.fulfilled as any]: (state, action) => {
             if (action && action.payload) {
-                console.log(action.meta.arg.commentId);
 
                 state.loading = false;
                 state[action.meta.arg.commentId] = { replieses: action.payload }

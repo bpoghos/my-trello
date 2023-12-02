@@ -15,7 +15,7 @@ const MainPage: FC = () => {
                     <p>Keep everything in the same place—even if your team isn't.</p>
                 </div>
                 <div className={styles.mainInfoImageContainer}>
-                    <img alt='mainInfoImage' src={mainInfoImage} />
+                    <img alt='mainInfoImage' src={mainInfoImage} loading='lazy' />
                 </div>
             </Container>
         </div>

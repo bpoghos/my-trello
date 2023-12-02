@@ -1,8 +1,7 @@
-import { ChangeEvent, FC, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Button, Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { HeaderProps } from './Header.interface'
-import { BsBell, BsFillGrid3X3GapFill, BsInfoCircle, } from "react-icons/bs"
 import logo from "./images/trello_logo_2.png"
 import logo_user from "./images/Trello_logo_user.png"
 import styles from "./styles/Header.module.css"
@@ -19,8 +18,7 @@ import { FaAngleLeft } from 'react-icons/fa6'
 
 
 
-
-const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
+const Header = ({ handleSingOut, setSearchVal, photos }: { handleSingOut: any, setSearchVal: any, photos: any }) => {
 
     const user = useSelector((state: any) => state.user.profile)
     const dispatch = useAppDispatch()
@@ -31,9 +29,49 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
     const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false)
     const [title, setTitle] = useState<string>("")
     const [createBoard, setCreateBoard] = useState<boolean>(false)
+    const [image, setImage] = useState<string>('')
+    const [selectedPhoto, setSelectedPhoto] = useState(photos[0].imageUrl);
     const workspace = useSelector((state: any) => state.workspace.workspace)
 
 
+    const profileDropDownOut: any = useRef(null);
+    const createOut: any = useRef(null)
+
+
+
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event: { target: any }) => {
+            if (profileDropDownOut.current && !profileDropDownOut.current.contains(event.target)) {
+                setIsOpen(false)
+
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [profileDropDownOut]);
+
+
+    useEffect(() => {
+        const handleClickOutside = (event: { target: any }) => {
+            if (createOut.current && !createOut.current.contains(event.target)) {
+                setIsCreateOpen(false)
+                setCreateBoard(false)
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [createOut]);
 
 
 
@@ -53,6 +91,13 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
         setIsOpen(false)
     }
 
+    const handleImageClick = (photoUrl: any) => {
+        const url = String(photoUrl)
+        setSelectedPhoto(photoUrl);
+        setImage(url)
+    };
+
+    console.log(image);
 
 
 
@@ -64,6 +109,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
         }
         const postData: any = {
             title,
+            image,
         };
 
         dispatch(addBoard(postData));
@@ -91,19 +137,19 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
         <>
             {
                 user ?
-                    <Navbar bg="white" variant='light' data-bs-theme="light" className={styles.navBarUser}>
+                    <Navbar variant='dark' data-bs-theme="light" className={styles.navBarUser}>
                         <Container fluid className='text-light'>
 
                             <Navbar.Brand href="/boards">
                                 <div className={styles.logoUserContainer}>
-                                    <img className={styles.logoUser} alt='brand-logo' src={logo_user} />
+                                    <img className={styles.logoUser} alt='brand-logo' src={logo_user} loading='lazy' />
                                 </div>
                             </Navbar.Brand>
                             <Nav className={`me-auto ${styles.links}`}>
                                 <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Workspaces" id="basic-nav-dropdown">
                                     <NavDropdown.Item eventKey="4.1" className={styles.navDropdownItem} href='/boards'>
-                                        <img className={styles.workspacePhoto} alt='profilePic' src={user.photoURL} />
-                                        <p>{user.displayName}'s Workspace</p>
+                                        <img className={styles.workspacePhoto} alt='profilePic' src={user.photoURL} loading='lazy' />
+                                        <p className={styles.navDropdownItemText}>{user.displayName}'s Workspace</p>
                                     </NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown className={`me-3 ${styles.navLinksUser}`} title="Recent" id="basic-nav-dropdown">
@@ -112,6 +158,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                                             return <NavDropdown.Item className={styles.boardLink} key={board.title}>
                                                 <Link to={`/workspace/${board.id}`} className={styles.recentContainer}>
                                                     <div className={styles.boardPhoto}>
+                                                        <img alt='backPhoto' src={board.image} loading='lazy' />
                                                         <p>{board.title}</p>
                                                     </div>
                                                     <p>{board.title}</p>
@@ -132,7 +179,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                             </div>
                             {
                                 isCreateOpen ?
-                                    <div className={styles.createDropDown}>
+                                    <div className={styles.createDropDown} ref={createOut}>
                                         <div className={styles.dropDownBtn} onClick={openCreateBoard}>
                                             <p>{CREATE_BOARD}</p>
                                             <span>{CREATE_BOARD_TEXT}</span>
@@ -142,7 +189,19 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
 
                             {
                                 createBoard ?
-                                    <div className={styles.createBoard}>
+                                    <div className={styles.createBoard} ref={createOut}>
+                                        <div className={styles.backgroundBox}>
+                                            {photos.map((photo: any) => (
+                                                <img
+                                                    key={photo.id}
+                                                    alt={photo.name}
+                                                    src={photo.imageUrl}
+                                                    style={selectedPhoto === photo.imageUrl ? { border: '2px solid red' } : {}}
+                                                    onClick={() => handleImageClick(photo.imageUrl)}
+                                                    loading='lazy'
+                                                />
+                                            ))}
+                                        </div>
                                         <div className={styles.createBoardPage}>
                                             <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
                                             <p aria-required>Board title<span>*</span></p>
@@ -159,6 +218,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                                         <img
                                             alt='profilePic'
                                             src={user.photoURL}
+                                            loading='lazy'
                                         />
                                         :
                                         user.displayName
@@ -166,7 +226,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                             </div>
                             {
                                 isOpen ?
-                                    <div className={styles.profileDropDown}>
+                                    <div className={styles.profileDropDown} ref={profileDropDownOut}>
                                         <p>ACCOUNT</p>
                                         <div onClick={openProfilePage} className={styles.profileInfoBox}>
 
@@ -177,6 +237,7 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                                                             <img
                                                                 alt='profilePic'
                                                                 src={user.photoURL}
+                                                                loading='lazy'
                                                             />
                                                             :
                                                             user.displayName
@@ -204,14 +265,13 @@ const Header: FC<HeaderProps> = ({ handleSingOut, setSearchVal }) => {
                     <Navbar bg="white" variant='light' data-bs-theme="light" className='p-0'>
                         <Container >
                             <Navbar.Brand href="/" className='p-0'>
-                                <img className={styles.logo} alt='brand-logo' src={logo} />
+                                <img className={styles.logo} alt='brand-logo' src={logo} loading='lazy' />
                             </Navbar.Brand>
                             <Link to="#"></Link>
                             <div className={styles.btnsContainer}>
                                 <Link to="/login">
-                                    <Button size='lg' variant='light'>Login</Button>
+                                    <Button size='lg' variant='light' className={styles.loginBtn}>Login</Button>
                                 </Link>
-                                <div className={styles.getFreeBtn}>Get Trello for free</div>
                             </div>
                         </Container>
                     </Navbar >

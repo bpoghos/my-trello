@@ -78,7 +78,7 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
         setIsOpen(false)
         dispatch(getTasksData({ workspaceId, processId }))
     }
-    console.log(user);
+
 
 
 
@@ -179,7 +179,7 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
 
                     {
                         user.photoURL ?
-                            <img alt="profilePic" src={user.photoURL} />
+                            <img alt="profilePic" src={user.photoURL} loading='lazy' />
                             : user.displayName || "user Photo"
                     }
                     <div className={styles.commentInputBox}>

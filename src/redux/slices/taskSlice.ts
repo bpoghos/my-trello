@@ -35,7 +35,6 @@ const taskSlice = createSlice({
         },
         [getTasksData.fulfilled as any]: (state, action) => {
             if (action && action.payload) {
-                console.log(action.meta.arg.processId);
 
                 state.loading = true;
                 state[action.meta.arg.processId] = { tasks: action.payload }

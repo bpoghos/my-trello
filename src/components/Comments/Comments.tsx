@@ -12,8 +12,6 @@ const Comments = ({ workspaceId, processId, taskId }: { workspaceId: any, proces
 
     const dispatch = useAppDispatch()
 
-    console.log(comments);
-
 
     useEffect(() => {
         dispatch(getCommentsData({ workspaceId, processId, taskId, }))
