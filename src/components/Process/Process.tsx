@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 import { ProcessProps, TaskProps, WorkspaceProps } from "../../app/App.interface";
 import styles from "./Process.module.css";
-import { FaAngleLeft, FaComment, FaList, FaPlus, FaTrash } from "react-icons/fa6";
+import { FaAngleLeft, FaComment, FaList, FaPlus } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import Modal from "../../shared/Modal";
 import Task from "../Task";
 import { Draggable } from "react-beautiful-dnd";
 import { BsThreeDots } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { addTask, deleteProcess, editProcess, editTask } from "../../redux/slices/workspaceSlice";
+import { addTask, deleteProcess, editProcess } from "../../redux/slices/workspaceSlice";
 import { AppDispatch } from "../../redux/store";
 import { getCommentsData, getProcessData, getTasksData } from "../../redux/thunks/workspaceThunk";
 import { Button } from "react-bootstrap";
@@ -22,22 +22,44 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
     const processId = data.id
 
     const tasks = useSelector((state: any) => state.tasks[processId])
-    const comments = useSelector((state: any) => state.comments.comments)
-    const [isOpen, setIsOpen] = useState<boolean>(taskId ? true : false);
-    const [openMenu, setOpenMenu] = useState<boolean>(false);
-    const [changeTitleClick, setChangeTitleClick] = useState<boolean>(false);
-    const [title, setTitle] = useState(changeTitleClick ? data.title : '');
+    const [isOpen, setIsOpen] = useState<boolean>(taskId ? true : false)
+    const [openMenu, setOpenMenu] = useState<boolean>(false)
+    const [changeTitleClick, setChangeTitleClick] = useState<boolean>(false)
+    const [title, setTitle] = useState(changeTitleClick ? data.title : '')
     const [isAddTaskClicked, setIsAddTaskClicked] = useState<boolean>(false)
     const [taskTitle, setTaskTitle] = useState<string>('')
     const [singleTask, setSingleTask] = useState<string>('')
 
+    const [taskComments, setTaskComments] = useState<{ [taskId: string]: any }>({})
 
+    useEffect(() => {
+        const fetchComments = async () => {
+            const commentsPromises = (tasks?.tasks || []).map((task: TaskProps) => {
+                console.log('asd')
+                return dispatch(getCommentsData({ workspaceId, processId, taskId: task.id }))
+            });
+
+            const commentsResults = await Promise.all(commentsPromises);
+
+            const updatedTaskComments = commentsResults.reduce((acc, comments, index) => {
+                const taskId = tasks.tasks[index].id;
+                acc[taskId] = comments;
+                return acc;
+            }, {} as { [taskId: string]: Comment[] })
+
+            setTaskComments((prevComments) => ({
+                ...prevComments,
+                ...updatedTaskComments,
+            }));
+
+        };
+
+        fetchComments();
+    }, [tasks, dispatch, workspaceId, processId]);
 
     useEffect(() => {
         dispatch(getTasksData({ workspaceId, processId }))
     }, [dispatch, processId, workspaceId])
-
-
 
 
 
@@ -146,44 +168,51 @@ const Process = ({ data, singleWorkspace }: { data: ProcessProps; singleWorkspac
 
             {
                 tasks && tasks.tasks?.length ? (
-                    tasks.tasks?.map((task: TaskProps, index: any) => (
-                        <Draggable key={task.id} draggableId={task.id} index={index}>
-                            {(provided) => (
-                                <div
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
-                                    className={styles.link}
-                                    key={task.id}
-                                >
-                                    <div className={styles.task} onClick={() => openModal(task)}>
-                                        <p>{task.title}</p>
-                                        {task.description.length ? <span><FaList /></span> : null}
-                                        {comments.length ? <span><FaComment /></span> : null}
+                    tasks.tasks?.map((task: TaskProps, index: any) => {
+                        const commentsForTask = taskComments[task.id]?.payload || []
+
+                        return (
+                            < Draggable key={task.id} draggableId={task.id} index={index} >
+                                {(provided) => (
+                                    <div
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        ref={provided.innerRef}
+                                        className={styles.link}
+                                        key={task.id}
+                                    >
+                                        <div className={styles.task} onClick={() => openModal(task)}>
+                                            <p>{task.title}</p>
+                                            {task.description.length ? <span><FaList /></span> : null}
+                                            {commentsForTask.length > 0 ? <span><FaComment /></span> : null}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </Draggable>
-                    ))
-                ) : null}
+                                )}
+                            </Draggable>
+                        );
+                    })
+                ) : null
+            }
             <Modal isOpen={isOpen} setIsOpen={setIsOpen} >
                 <Task data={singleTask} setIsOpen={setIsOpen} workspaceId={workspaceId} processId={processId} />
             </Modal>
 
-            {isAddTaskClicked ? (
-                <div className={styles.createTask}>
-                    <input type='text' placeholder="Enter list title..." autoFocus onChange={handleChangeTaskName} />
-                    <div className={styles.createBtnsContainer}>
-                        <Button disabled={!taskTitle ? true : false} onClick={handliCreateTaskClick}>Create</Button>
-                        <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
+            {
+                isAddTaskClicked ? (
+                    <div className={styles.createTask}>
+                        <input type='text' placeholder="Enter list title..." autoFocus onChange={handleChangeTaskName} />
+                        <div className={styles.createBtnsContainer}>
+                            <Button disabled={!taskTitle ? true : false} onClick={handliCreateTaskClick}>Create</Button>
+                            <div className={styles.backPageIconContainer} onClick={handleBackIconClick}><FaAngleLeft /></div>
+                        </div>
                     </div>
-                </div>
-            ) :
-                <div className={styles.addAnotherlistContainer} onClick={handleAddTaskClick}>
-                    <p> <span><FaPlus /></span>{" "} Add a card</p>
-                </div>}
+                ) :
+                    <div className={styles.addAnotherlistContainer} onClick={handleAddTaskClick}>
+                        <p> <span><FaPlus /></span>{" "} Add a card</p>
+                    </div>
+            }
 
-        </div>
+        </div >
     );
 };
 

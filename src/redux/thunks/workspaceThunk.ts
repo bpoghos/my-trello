@@ -1,9 +1,8 @@
-import { DocumentData, DocumentReference, Query, addDoc, collection, doc, getDocs } from "@firebase/firestore";
+import { addDoc, collection, getDocs } from "@firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../firebase";
-import { WorkspaceProps } from "../../app/App.interface";
 
-export const getWorkspaceData = createAsyncThunk(
+export const getWorkspaceData: any = createAsyncThunk(
     "workspace/getWorkspaceData",
     async () => {
         const getData = await getDocs(collection(db, "workspace"))
@@ -53,7 +52,6 @@ export const getCommentsData = createAsyncThunk(
     "comments/getCommentsData",
 
     async ({ workspaceId, processId, taskId }: { workspaceId: any, processId: any, taskId: any }) => {
-
         const docRef = collection(db, "workspace", workspaceId, 'processes', processId, "tasks", taskId, "comments")
         const getData = await getDocs(docRef)
         if (getData.docs) {

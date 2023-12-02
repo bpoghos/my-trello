@@ -4,13 +4,13 @@ import Process from "../../../components/Process";
 import { useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
-import { addProcess } from "../../../redux/slices/workspaceSlice";
+import { addProcess, editTask } from "../../../redux/slices/workspaceSlice";
 import Loading from "../../../components/Loading";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { FaAngleLeft, FaPlus } from "react-icons/fa6";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { getProcessData } from "../../../redux/thunks/workspaceThunk";
+import { getProcessData, getTasksData } from "../../../redux/thunks/workspaceThunk";
 
 import styles from "../styles/Workspace.module.css"
 
@@ -29,6 +29,8 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
     const workspace = useSelector((state: any) => state.workspace.workspace)
     const loading = useSelector((state: any) => state.workspace.loading)
     const processes = useSelector((state: any) => state.processes.processes)
+    const tasks = useSelector((state: any) => state.tasks)
+
     const [filteredProcesses, setFilteredProcesses] = useState<ProcessProps[]>()
 
     useEffect(() => {
@@ -82,6 +84,8 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
 
     const onDragEnd = (result: any) => {
         const { source, destination, draggableId } = result;
+        console.log(result);
+
         if (!destination) {
             return;
         }
@@ -90,41 +94,24 @@ const Workspace = ({ searchVal }: { searchVal: string }) => {
             return;
         }
 
+        const tasksById = tasks[source.droppableId]; // vercraci taskern en
 
-        const sourceProcess: ProcessProps = processes.find(
-            (process: ProcessProps) => process.id === source.droppableId) as ProcessProps;
-        const destinationColumn: ProcessProps = processes.find(
-            (process: ProcessProps) => process.id === destination.droppableId) as ProcessProps;
+        const updatedTaskData = tasksById.tasks.find((task: TaskProps) => task.id === draggableId);
+        console.log(updatedTaskData);
 
-        const newSourceCards: TaskProps[] = Array.from(sourceProcess?.tasks as TaskProps[])
-        const [removedCard] = newSourceCards.splice(source.index, 1);
-
-        if (source.droppableId === destination.droppableId) {
-            newSourceCards.splice(destination.index, 0, removedCard);
-
-            const newColumn: ProcessProps = {
-                ...sourceProcess,
-                tasks: newSourceCards,
-            };
-
-        } else {
-            const newDestinationCards: TaskProps[] = Array.from(destinationColumn.tasks);
-            newDestinationCards.splice(destination.index, 0, removedCard);
-
-            const newsourceProcess: ProcessProps = {
-                ...sourceProcess,
-                tasks: newSourceCards
-            }
-
-            const newDestinationColumn: ProcessProps = {
-                ...destinationColumn,
-                tasks: newDestinationCards
-            }
-
-        }
+        dispatch(editTask({
+            payload: updatedTaskData,
+            workspaceId: singleWorkspace.id,
+            processId: undefined,
+            taskId: draggableId,
+            sourceProcessId: source.droppableId,
+            destinationProcessId: destination.droppableId,
+            sourceIndex: source.index,
+            destinationIndex: destination.index,
+        }))
+            .then(() => dispatch(getTasksData({ workspaceId: singleWorkspace.id, processId: source.droppableId })))
+            .then(() => dispatch(getTasksData({ workspaceId: singleWorkspace.id, processId: destination.droppableId })))
     }
-
-
 
 
 

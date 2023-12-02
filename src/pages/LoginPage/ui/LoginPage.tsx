@@ -10,6 +10,7 @@ import { signInWithEmail } from "../../../redux/thunks/emailLoginThunk"
 import { Error, emailRegex } from "../../RegisterPage/ui/errors/RegisterPageErrors"
 import { useAppDispatch } from "../../../hooks/useAppDispatch"
 import { useSelector } from "react-redux"
+import Loading from "../../../components/Loading"
 
 
 const LoginPage: FC<ProfilePageProps> = () => {
@@ -21,6 +22,8 @@ const LoginPage: FC<ProfilePageProps> = () => {
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
     const error = useSelector((state: any) => state.user.error)
+    const loading = useSelector((state: any) => state.user.loading)
+
 
 
     const dispatch = useAppDispatch()
@@ -114,7 +117,7 @@ const LoginPage: FC<ProfilePageProps> = () => {
                             passwordError ? <p className={styles.error}>{passwordError}</p> : null
                         }
                     </Form.Group>
-                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignIn}>Continue</Button>
+                    <Button className={`${styles.btn} mt-2 mb-4`} variant="primary" onClick={handleSignIn} disabled={loading}>{loading ? '...' : 'Continue'}</Button>
                     OR
                     <Button onClick={() => dispatch(signInWithGoogle())} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

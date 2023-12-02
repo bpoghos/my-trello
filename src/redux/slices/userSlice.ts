@@ -66,6 +66,8 @@ const userSlice = createSlice({
             state.profile = action.payload;
         },
         [signUpWithEmail.rejected as any]: (state, action) => {
+            console.log('rej');
+
             state.loading = false;
             state.error = action.error.message
         },

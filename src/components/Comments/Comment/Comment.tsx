@@ -33,6 +33,7 @@ const Comment = ({ comment, workspaceId, processId, taskId }: { comment: any, wo
 
     const handleReplyBtnClick = () => {
         setIsReplyBtnClick(true)
+        setReply('')
     }
 
     const handleReplyWrite = (e: any) => {

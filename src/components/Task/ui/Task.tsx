@@ -84,11 +84,12 @@ const Task = ({ data, setIsOpen, workspaceId, processId }: { data: any | undefin
 
     const handleAddComment = () => {
         const payload = {
+            taskId,
             userId: user.uid,
             userName: user.displayName,
             userPhoto: user.photoURL,
             comment,
-            date: Date.now()
+            date: Date.now(),
         }
         dispatch(addcomment({ payload, workspaceId, processId, taskId }))
         setComment('')

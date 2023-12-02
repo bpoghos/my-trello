@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ProcessProps, WorkspaceProps } from "../../app/App.interface";
 import { addBoard, getProcessData, getWorkspaceData } from "../thunks/workspaceThunk";
-import { addDoc, collection, deleteDoc, doc, setDoc } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from "@firebase/firestore";
 import { db } from "../../firebase";
 import { log } from "console";
 
@@ -100,24 +100,79 @@ export const addReply = createAsyncThunk(
 
 export const editTask = createAsyncThunk(
     "task/editTask",
-    async ({ payload, workspaceId, processId, taskId }: { payload: any; workspaceId: string; processId: string, taskId: any }) => {
+    async ({
+        payload,
+        workspaceId,
+        processId,
+        taskId,
+        sourceProcessId,
+        destinationProcessId,
+        sourceIndex,
+        destinationIndex,
+    }: {
+        payload: any;
+        workspaceId: string;
+        processId?: string;
+        taskId: any;
+        sourceProcessId?: string;
+        destinationProcessId?: string;
+        sourceIndex?: number;
+        destinationIndex?: number;
+    }) => {
         try {
             if (!payload) {
                 console.error('Error: Payload is undefined.');
                 throw new Error('Invalid payload.');
             }
 
-            const taskRef = doc(db, 'workspace', workspaceId, 'processes', processId, "tasks", taskId);
-            await setDoc(taskRef, payload, { merge: true });
-            return { processId, ...payload };
+            if (processId) {
+                const taskRef = doc(db, 'workspace', workspaceId, 'processes', processId, "tasks", taskId);
+                await setDoc(taskRef, payload, { merge: true });
+                return { processId, ...payload };
+            }
 
+            //case for draggable
+
+            if (sourceProcessId && destinationProcessId) {
+                if (sourceProcessId === destinationProcessId) {
+                    const tasksRef = collection(db, 'workspace', workspaceId, 'processes', sourceProcessId, 'tasks');
+                    const snapshot = await getDocs(tasksRef);
+
+                    const tasks = snapshot.docs.map(doc => doc.data());
+
+                    tasks.splice(sourceIndex!, 1);
+                    tasks.splice(destinationIndex!, 0, { ...payload });
+
+                    tasks.forEach(async (task, index) => {
+                        console.log(task);
+
+                        const taskRef = doc(db, 'workspace', workspaceId, 'processes', sourceProcessId, 'tasks', task.id);
+                        await setDoc(taskRef, task, { merge: true });
+                    });
+
+                    return { processId: destinationProcessId, ...payload };
+                }
+
+                const taskRef = doc(db, 'workspace', workspaceId, 'processes', sourceProcessId, "tasks", taskId);
+                await setDoc(taskRef, payload, { merge: true });
+
+                if (sourceProcessId !== undefined && destinationProcessId !== undefined) {
+                    if (sourceProcessId !== destinationProcessId) {
+                        const sourceTaskRef = doc(db, 'workspace', workspaceId, 'processes', sourceProcessId, "tasks", taskId);
+                        await deleteDoc(sourceTaskRef);
+                        const destinationTaskRef = doc(db, 'workspace', workspaceId, 'processes', destinationProcessId, "tasks", taskId);
+                        await setDoc(destinationTaskRef, payload, { merge: true });
+                    }
+                }
+                return { processId: destinationProcessId, ...payload };
+            }
+            console.error('Error: Either processId or (sourceProcessId and destinationProcessId) must be provided.');
+            throw new Error('Invalid parameters.');
         } catch (err) {
             console.log(err);
-
         }
-
     }
-)
+);
 
 
 export const editProcess = createAsyncThunk(

@@ -31,14 +31,20 @@ const commentSlice = createSlice({
             state.error = action.error.message
         },
         [getCommentsData.pending as any]: (state, action) => {
+            console.log('pending');
+
             state.loading = true
         },
         [getCommentsData.fulfilled as any]: (state, action) => {
+            console.log('fullf', action.payload);
+
             state.loading = false;
             state.comments = action.payload
         },
 
         [getCommentsData.rejected as any]: (state, action) => {
+            console.log('rej');
+
             state.loading = false;
             state.error = action.error.message
         },

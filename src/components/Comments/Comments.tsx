@@ -19,7 +19,6 @@ const Comments = ({ workspaceId, processId, taskId }: { workspaceId: any, proces
 
 
 
-
     const sortedComments = comments.slice().sort((a: CommentProps, b: CommentProps) => b.date - a.date);
 
     return (

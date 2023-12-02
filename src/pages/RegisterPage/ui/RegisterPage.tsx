@@ -22,12 +22,12 @@ const RegisterPage: FC<ProfilePageProps> = () => {
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
     const error = useSelector((state: any) => state.user.error)
+    const loading = useSelector((state: any) => state.user.loading)
+
+    console.log(error);
 
 
     const dispatch = useAppDispatch()
-
-
-
 
 
     const handleVisable = () => {
@@ -119,7 +119,9 @@ const RegisterPage: FC<ProfilePageProps> = () => {
                     <Button
                         className={`${styles.btn} mt-2 mb-4`}
                         variant="primary"
-                        onClick={handleSignUp}>Sign up</Button>
+                        onClick={handleSignUp}
+                        disabled={loading}
+                    >{loading ? "Loading..." : "Sign up"}</Button>
                     OR
                     <Button onClick={signInWithGoogle} className={`${styles.socialBtn} mt-4`} variant="light">
                         <div className={styles.iconBox}>

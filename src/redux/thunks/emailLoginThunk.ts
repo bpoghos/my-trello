@@ -6,28 +6,28 @@ import { logOut } from "../slices/userSlice";
 
 
 
-
-
 export const signUpWithEmail = createAsyncThunk(
     "user/signUpWithEmail",
     async ({ email, password }: { email: string, password: string }) => {
         try {
             const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
-            return userCredential.user
+            return userCredential.user;
         } catch (err) {
             if (err instanceof FirebaseError) {
                 if (err.code === 'auth/email-already-in-use') {
-                    console.log('already have');
-
+                    console.log('Email already in use');
                 } else {
                     console.error('Firebase authentication error:', err.message);
                 }
+                throw err; // Make sure to re-throw the error for rejection
             } else {
                 console.error('Non-Firebase error:', err);
+                throw new Error('Unexpected error during authentication');
             }
         }
     }
-)
+);
+
 
 
 export const signInWithEmail = createAsyncThunk(
